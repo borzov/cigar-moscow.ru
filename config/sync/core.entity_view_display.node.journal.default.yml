@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.journal.body
+    - field.field.node.journal.field_archive_documents
     - field.field.node.journal.field_cigars
     - field.field.node.journal.field_cover
     - field.field.node.journal.field_demo
@@ -14,6 +15,7 @@ dependencies:
     - field.field.node.journal.field_source_id
     - node.type.journal
   module:
+    - file
     - link
     - text
     - user
@@ -33,6 +35,14 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: -20
+    region: content
+  field_archive_documents:
+    type: file_default
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    weight: 20
     region: content
   field_cigars:
     type: entity_reference_label

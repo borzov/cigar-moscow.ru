@@ -1,0 +1,27 @@
+uuid: cc89f915-ce50-42f8-8d10-bdc01d27d632
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_archive_documents
+    - node.type.journal
+  module:
+    - file
+id: node.journal.field_archive_documents
+field_name: field_archive_documents
+entity_type: node
+bundle: journal
+label: 'Приложения к публикации'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: legacy-documents
+  file_extensions: pdf
+  max_filesize: ''
+  description_field: true
+field_type: file

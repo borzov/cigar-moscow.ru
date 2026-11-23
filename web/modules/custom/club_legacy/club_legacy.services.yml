@@ -1,0 +1,6 @@
+services:
+  club_legacy.redirect_subscriber:
+    class: Drupal\club_legacy\EventSubscriber\LegacyRedirectSubscriber
+    arguments: ['@keyvalue', '@entity.repository', '@page_cache_kill_switch']
+    tags:
+      - { name: event_subscriber }

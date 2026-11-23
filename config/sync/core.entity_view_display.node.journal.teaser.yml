@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.journal.body
+    - field.field.node.journal.field_archive_documents
     - field.field.node.journal.field_cigars
     - field.field.node.journal.field_cover
     - field.field.node.journal.field_demo
@@ -50,6 +51,7 @@ content:
     weight: 100
     region: content
 hidden:
+  field_archive_documents: true
   field_cigars: true
   field_demo: true
   field_event: true

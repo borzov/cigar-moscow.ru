@@ -1,0 +1,694 @@
+[
+  {
+    "id": "legacy:festival-2016",
+    "type": "festival",
+    "alias": "/festival/2016",
+    "source": "/news.html?category=27",
+    "title": "Moscow Aficionados Cigar Fest 2016",
+    "body": "<p>Фестиваль прошёл в Москве с 14 по 16 октября 2016 года. В первый день гостей принял ресторан «Гусятникофф», во второй состоялся гала-ужин, а в третий прошла заключительная встреча.</p>",
+    "redirects": [
+      "/news.html?category=27",
+      "/news.html?category=27&show_all=1",
+      "/cigar_news.html?category=27",
+      "/cigar_news.html?category=27&show_all=1"
+    ],
+    "fields": {
+      "field_date": "2016-10-14",
+      "field_end": "2016-10-16",
+      "field_year": 2016,
+      "field_program": "14 октября — Русский вечер. 15 октября — гала-ужин. 16 октября — заключительная встреча."
+    },
+    "cover_from": 886
+  },
+  {
+    "id": "legacy:festival-2016-day-1",
+    "type": "event",
+    "alias": "/events/ma-cigar-fest-2016-day-1",
+    "source": "/cigar_news.html?item_id=886",
+    "title": "Русский вечер · MA Cigar Fest 2016",
+    "body": "<p>14 октября гости встретились в ресторане «Гусятникофф». Президент клуба Андрей Асеев открыл фестиваль.</p>",
+    "fields": {
+      "field_date": "2016-10-14",
+      "field_event_type": "club",
+      "field_festival": {
+        "ref": "legacy:festival-2016"
+      }
+    },
+    "cover_from": 886
+  },
+  {
+    "id": "legacy:festival-2016-day-1-album",
+    "type": "album",
+    "alias": "/albums/ma-cigar-fest-2016-day-1",
+    "source": "/cigar_news.html?item_id=886",
+    "title": "Русский вечер · фотографии",
+    "body": "<p>Фотографии из архивного отчёта о первом дне фестиваля.</p>",
+    "fields": {
+      "field_date": "2016-10-14",
+      "field_event": {
+        "ref": "legacy:festival-2016-day-1"
+      },
+      "field_festival": {
+        "ref": "legacy:festival-2016"
+      }
+    },
+    "images_from": [
+      886
+    ],
+    "published": true,
+    "cover_from": 886
+  },
+  {
+    "id": "legacy:festival-2016-day-2",
+    "type": "event",
+    "alias": "/events/ma-cigar-fest-2016-day-2",
+    "source": "/cigar_news.html?item_id=888",
+    "title": "Гала-ужин · MA Cigar Fest 2016",
+    "body": "<p>Второй вечер фестиваля прошёл в ресторане G.Graf. Во время гала-ужина клуб отметил шестую годовщину.</p>",
+    "fields": {
+      "field_date": "2016-10-15",
+      "field_event_type": "club",
+      "field_festival": {
+        "ref": "legacy:festival-2016"
+      }
+    }
+  },
+  {
+    "id": "legacy:festival-2016-day-2-album",
+    "type": "album",
+    "alias": "/albums/ma-cigar-fest-2016-day-2",
+    "source": "/cigar_news.html?item_id=888",
+    "title": "Гала-ужин · фотографии",
+    "body": "<p>Фотографии из архивного отчёта о втором дне фестиваля.</p>",
+    "fields": {
+      "field_date": "2016-10-15",
+      "field_event": {
+        "ref": "legacy:festival-2016-day-2"
+      },
+      "field_festival": {
+        "ref": "legacy:festival-2016"
+      }
+    },
+    "images_from": [
+      888
+    ],
+    "published": false
+  },
+  {
+    "id": "legacy:festival-2016-day-3",
+    "type": "event",
+    "alias": "/events/ma-cigar-fest-2016-day-3",
+    "source": "/cigar_news.html?item_id=887",
+    "title": "Заключительная встреча · MA Cigar Fest 2016",
+    "body": "<p>На третий день фестиваля гости собрались в лаунже Davidoff на Малой Бронной.</p>",
+    "fields": {
+      "field_date": "2016-10-16",
+      "field_event_type": "club",
+      "field_festival": {
+        "ref": "legacy:festival-2016"
+      }
+    },
+    "cover_from": 887,
+    "cover_url": "https://www.cigar-moscow.ru/content/Image/news/2016-10-19/2016-10-19-01.JPG"
+  },
+  {
+    "id": "legacy:festival-2016-day-3-album",
+    "type": "album",
+    "alias": "/albums/ma-cigar-fest-2016-day-3",
+    "source": "/cigar_news.html?item_id=887",
+    "title": "Заключительная встреча · фотографии",
+    "body": "<p>Фотографии из архивного отчёта о третьем дне фестиваля.</p>",
+    "fields": {
+      "field_date": "2016-10-16",
+      "field_event": {
+        "ref": "legacy:festival-2016-day-3"
+      },
+      "field_festival": {
+        "ref": "legacy:festival-2016"
+      }
+    },
+    "images_from": [
+      887
+    ],
+    "published": true,
+    "cover_from": 887,
+    "cover_url": "https://www.cigar-moscow.ru/content/Image/news/2016-10-19/2016-10-19-01.JPG"
+  },
+  {
+    "id": "legacy:article-879",
+    "type": "journal",
+    "alias": "/journal/ma-cigar-fest-2016-partnership",
+    "source": "/anons.html?item_id=879",
+    "article": 879,
+    "published": false,
+    "fields": {
+      "field_rubrics": [
+        {
+          "slug": "club"
+        }
+      ],
+      "field_festival": {
+        "ref": "legacy:festival-2016"
+      }
+    }
+  },
+  {
+    "id": "legacy:article-883",
+    "type": "journal",
+    "alias": "/journal/ma-cigar-fest-2016-invitation",
+    "source": "/anons.html?item_id=883",
+    "article": 883,
+    "published": false,
+    "fields": {
+      "field_rubrics": [
+        {
+          "slug": "club"
+        }
+      ],
+      "field_festival": {
+        "ref": "legacy:festival-2016"
+      }
+    }
+  },
+  {
+    "id": "legacy:article-886",
+    "type": "journal",
+    "alias": "/journal/ma-cigar-fest-2016-russian-evening",
+    "source": "/cigar_news.html?item_id=886",
+    "article": 886,
+    "published": true,
+    "fields": {
+      "field_rubrics": [
+        {
+          "slug": "club"
+        }
+      ],
+      "field_festival": {
+        "ref": "legacy:festival-2016"
+      },
+      "field_event": {
+        "ref": "legacy:festival-2016-day-1"
+      }
+    },
+    "redirects": [
+      "/cigar_news.html?item_id=886",
+      "/cigar_news.html?category=27&item_id=886"
+    ]
+  },
+  {
+    "id": "legacy:article-888",
+    "type": "journal",
+    "alias": "/journal/ma-cigar-fest-2016-gala",
+    "source": "/cigar_news.html?item_id=888",
+    "article": 888,
+    "published": false,
+    "fields": {
+      "field_rubrics": [
+        {
+          "slug": "club"
+        }
+      ],
+      "field_festival": {
+        "ref": "legacy:festival-2016"
+      },
+      "field_event": {
+        "ref": "legacy:festival-2016-day-2"
+      }
+    }
+  },
+  {
+    "id": "legacy:article-887",
+    "type": "journal",
+    "alias": "/journal/ma-cigar-fest-2016-after-party",
+    "source": "/cigar_news.html?item_id=887",
+    "article": 887,
+    "published": true,
+    "fields": {
+      "field_rubrics": [
+        {
+          "slug": "club"
+        }
+      ],
+      "field_festival": {
+        "ref": "legacy:festival-2016"
+      },
+      "field_event": {
+        "ref": "legacy:festival-2016-day-3"
+      }
+    },
+    "redirects": [
+      "/cigar_news.html?item_id=887",
+      "/cigar_news.html?category=27&item_id=887"
+    ],
+    "cover_from": 887,
+    "cover_url": "https://www.cigar-moscow.ru/content/Image/news/2016-10-19/2016-10-19-01.JPG"
+  },
+  {
+    "id": "legacy:macanudo-1968-gigante",
+    "type": "cigar",
+    "alias": "/cigars/macanudo-1968-gigante",
+    "source": "/tasting.html?item_id=111",
+    "title": "Macanudo 1968 Gigante",
+    "fields": {
+      "field_brand_term": {
+        "term": "Macanudo"
+      },
+      "field_country_term": {
+        "term": "Доминиканская Республика"
+      },
+      "field_format": "Gigante",
+      "field_edition": "1968"
+    }
+  },
+  {
+    "id": "legacy:macanudo-1968-corona",
+    "type": "cigar",
+    "alias": "/cigars/macanudo-1968-corona",
+    "source": "/tasting.html?item_id=111",
+    "title": "Macanudo 1968 Corona",
+    "fields": {
+      "field_brand_term": {
+        "term": "Macanudo"
+      },
+      "field_country_term": {
+        "term": "Доминиканская Республика"
+      },
+      "field_format": "Corona",
+      "field_edition": "1968"
+    }
+  },
+  {
+    "id": "legacy:macanudo-1968-robusto",
+    "type": "cigar",
+    "alias": "/cigars/macanudo-1968-robusto",
+    "source": "/tasting.html?item_id=111",
+    "title": "Macanudo 1968 Robusto",
+    "fields": {
+      "field_brand_term": {
+        "term": "Macanudo"
+      },
+      "field_country_term": {
+        "term": "Доминиканская Республика"
+      },
+      "field_format": "Robusto",
+      "field_edition": "1968"
+    }
+  },
+  {
+    "id": "legacy:ramon-allones-specially-selected",
+    "type": "cigar",
+    "alias": "/cigars/ramon-allones-specially-selected",
+    "source": "/tasting.html?item_id=123",
+    "title": "Ramon Allones Specially Selected",
+    "fields": {
+      "field_brand_term": {
+        "term": "Ramon Allones"
+      },
+      "field_country_term": {
+        "term": "Куба"
+      },
+      "field_format": "Robusto"
+    }
+  },
+  {
+    "id": "legacy:romeo-y-julieta-wide-churchills",
+    "type": "cigar",
+    "alias": "/cigars/romeo-y-julieta-wide-churchills",
+    "source": "/tasting.html?item_id=102",
+    "title": "Romeo y Julieta Wide Churchills",
+    "fields": {
+      "field_brand_term": {
+        "term": "Romeo y Julieta"
+      },
+      "field_country_term": {
+        "term": "Куба"
+      },
+      "field_format": "Wide Churchills"
+    }
+  },
+  {
+    "id": "legacy:coronado-by-la-flor-corona-especial",
+    "type": "cigar",
+    "alias": "/cigars/coronado-by-la-flor-corona-especial",
+    "source": "/tasting.html?item_id=146",
+    "title": "Coronado by la Flor Corona Especial",
+    "fields": {
+      "field_brand_term": {
+        "term": "Coronado by la Flor"
+      },
+      "field_country_term": {
+        "term": "Доминиканская Республика"
+      },
+      "field_format": "Corona Especial"
+    }
+  },
+  {
+    "id": "legacy:meeting-111",
+    "type": "event",
+    "alias": "/events/degustatsiya-111",
+    "source": "/tasting.html?item_id=111",
+    "title": "Три витолы Macanudo 1968 в «Грильяже»",
+    "fields": {
+      "field_event_type": "club",
+      "field_date": "2010-04-14"
+    }
+  },
+  {
+    "id": "legacy:meeting-123",
+    "type": "event",
+    "alias": "/events/degustatsiya-123",
+    "source": "/tasting.html?item_id=123",
+    "title": "Международная дегустация Ramon Allones Specially Selected",
+    "fields": {
+      "field_event_type": "club",
+      "field_date": "2009-11-18"
+    }
+  },
+  {
+    "id": "legacy:meeting-102",
+    "type": "event",
+    "alias": "/events/degustatsiya-102",
+    "source": "/tasting.html?item_id=102",
+    "title": "Дегустация Wide Churchills в Барменской ассоциации России",
+    "fields": {
+      "field_event_type": "club",
+      "field_date": "2010-09-13"
+    }
+  },
+  {
+    "id": "legacy:meeting-298",
+    "type": "event",
+    "alias": "/events/degustatsiya-298",
+    "source": "/tasting.html?item_id=298",
+    "title": "Повторная дегустация Romeo y Julieta Wide Churchills",
+    "fields": {
+      "field_event_type": "club",
+      "field_date": "2011-05-25"
+    }
+  },
+  {
+    "id": "legacy:article-111",
+    "type": "journal",
+    "alias": "/journal/tri-vitoly-macanudo-1968",
+    "source": "/tasting.html?item_id=111",
+    "article": 111,
+    "published": true,
+    "fields": {
+      "field_rubrics": [
+        {
+          "slug": "club"
+        }
+      ],
+      "field_cigars": [
+        {
+          "ref": "legacy:macanudo-1968-gigante"
+        },
+        {
+          "ref": "legacy:macanudo-1968-corona"
+        },
+        {
+          "ref": "legacy:macanudo-1968-robusto"
+        }
+      ],
+      "field_event": {
+        "ref": "legacy:meeting-111"
+      }
+    },
+    "redirects": [
+      "/tasting.html?item_id=111"
+    ]
+  },
+  {
+    "id": "legacy:article-123",
+    "type": "journal",
+    "alias": "/journal/ramon-allones-dve-karty",
+    "source": "/tasting.html?item_id=123",
+    "article": 123,
+    "published": true,
+    "fields": {
+      "field_rubrics": [
+        {
+          "slug": "club"
+        }
+      ],
+      "field_cigars": [
+        {
+          "ref": "legacy:ramon-allones-specially-selected"
+        }
+      ],
+      "field_event": {
+        "ref": "legacy:meeting-123"
+      }
+    },
+    "redirects": [
+      "/tasting.html?item_id=123"
+    ]
+  },
+  {
+    "id": "legacy:article-102",
+    "type": "journal",
+    "alias": "/journal/wide-churchills-2010",
+    "source": "/tasting.html?item_id=102",
+    "article": 102,
+    "published": true,
+    "fields": {
+      "field_rubrics": [
+        {
+          "slug": "club"
+        }
+      ],
+      "field_cigars": [
+        {
+          "ref": "legacy:romeo-y-julieta-wide-churchills"
+        }
+      ],
+      "field_event": {
+        "ref": "legacy:meeting-102"
+      }
+    },
+    "redirects": [
+      "/tasting.html?item_id=102"
+    ]
+  },
+  {
+    "id": "legacy:article-298",
+    "type": "journal",
+    "alias": "/journal/wide-churchills-2011",
+    "source": "/tasting.html?item_id=298",
+    "article": 298,
+    "published": false,
+    "fields": {
+      "field_rubrics": [
+        {
+          "slug": "pairing_drink"
+        }
+      ],
+      "field_cigars": [
+        {
+          "ref": "legacy:romeo-y-julieta-wide-churchills"
+        }
+      ],
+      "field_event": {
+        "ref": "legacy:meeting-298"
+      }
+    }
+  },
+  {
+    "id": "legacy:article-146",
+    "type": "journal",
+    "alias": "/journal/coronado-corona-especial",
+    "source": "/tasting.html?item_id=146",
+    "article": 146,
+    "published": true,
+    "fields": {
+      "field_rubrics": [
+        {
+          "slug": "portrait"
+        }
+      ],
+      "field_cigars": [
+        {
+          "ref": "legacy:coronado-by-la-flor-corona-especial"
+        }
+      ]
+    },
+    "redirects": [
+      "/tasting.html?item_id=146"
+    ]
+  },
+  {
+    "id": "legacy:tasting-111-gigante",
+    "type": "tasting",
+    "alias": "/tastings/macanudo-1968-gigante-2010-04-14",
+    "source": "/tasting.html?item_id=111",
+    "title": "Macanudo 1968 Gigante · 14 апреля 2010",
+    "body": "<p>Для этой витолы в клубном протоколе учтены пять оценок. <a href=\"/journal/tri-vitoly-macanudo-1968\">Все три дегустационные карты встречи</a>.</p>",
+    "fields": {
+      "field_date": "2010-04-14",
+      "field_cigar": {
+        "ref": "legacy:macanudo-1968-gigante"
+      },
+      "field_score_original": "89",
+      "field_club_score": 89,
+      "field_event": {
+        "ref": "legacy:meeting-111"
+      },
+      "field_third_first": "Древесина, кожа и кофейный оттенок дыма.",
+      "field_third_second": "Терпкость ушла, сохранились луговые цветы.",
+      "field_third_last": "К ровному вкусу добавились горчинка и лёгкая кислинка."
+    },
+    "created": "2010-04-20"
+  },
+  {
+    "id": "legacy:tasting-111-corona",
+    "type": "tasting",
+    "alias": "/tastings/macanudo-1968-corona-2010-04-14",
+    "source": "/tasting.html?item_id=111",
+    "title": "Macanudo 1968 Corona · 14 апреля 2010",
+    "body": "<p>Для этой витолы в клубном протоколе учтены пять оценок. <a href=\"/journal/tri-vitoly-macanudo-1968\">Все три дегустационные карты встречи</a>.</p>",
+    "fields": {
+      "field_date": "2010-04-14",
+      "field_cigar": {
+        "ref": "legacy:macanudo-1968-corona"
+      },
+      "field_score_original": "89",
+      "field_club_score": 89,
+      "field_event": {
+        "ref": "legacy:meeting-111"
+      },
+      "field_third_first": "От резкости горького шоколада к миндалю.",
+      "field_third_second": "Миндаль и пережаренные тыквенные семечки.",
+      "field_third_last": "Вкус сохраняется, дым остаётся мягким."
+    },
+    "created": "2010-04-20"
+  },
+  {
+    "id": "legacy:tasting-111-robusto",
+    "type": "tasting",
+    "alias": "/tastings/macanudo-1968-robusto-2010-04-14",
+    "source": "/tasting.html?item_id=111",
+    "title": "Macanudo 1968 Robusto · 14 апреля 2010",
+    "body": "<p>Для этой витолы в клубном протоколе учтены пять оценок. <a href=\"/journal/tri-vitoly-macanudo-1968\">Все три дегустационные карты встречи</a>.</p>",
+    "fields": {
+      "field_date": "2010-04-14",
+      "field_cigar": {
+        "ref": "legacy:macanudo-1968-robusto"
+      },
+      "field_score_original": "89",
+      "field_club_score": 89,
+      "field_event": {
+        "ref": "legacy:meeting-111"
+      },
+      "field_third_first": "Грецкий орех, хвоя и печёный картофель.",
+      "field_third_second": "Орех сохраняется, появляются дубовая кора и сирень.",
+      "field_third_last": "Крепость нарастает, к знакомым вкусам добавляется кислинка."
+    },
+    "created": "2010-04-20"
+  },
+  {
+    "id": "legacy:tasting-123-moscow",
+    "type": "tasting",
+    "alias": "/tastings/ramon-allones-specially-selected-moscow-2009",
+    "source": "/tasting.html?item_id=123",
+    "title": "Ramon Allones Specially Selected · Москва",
+    "body": "<p>Оценка и заметки взяты из карты московской группы в <a href=\"/journal/ramon-allones-dve-karty\">отчёте о международной дегустации</a>. Историческая строка рейтинга объединяет обе карты.</p>",
+    "fields": {
+      "field_date": "2009-11-18",
+      "field_cigar": {
+        "ref": "legacy:ramon-allones-specially-selected"
+      },
+      "field_score_original": "95/89",
+      "field_club_score": 95,
+      "field_event": {
+        "ref": "legacy:meeting-123"
+      },
+      "field_third_first": "Молочный шоколад, цветочный оттенок и мускат.",
+      "field_third_second": "Вкус стал крепче; участники отметили кожу, дерево и хлеб.",
+      "field_third_last": "Кожа, хлеб и перец."
+    },
+    "created": "2009-11-20"
+  },
+  {
+    "id": "legacy:tasting-123-ekaterinburg",
+    "type": "tasting",
+    "alias": "/tastings/ramon-allones-specially-selected-ekaterinburg-2009",
+    "source": "/tasting.html?item_id=123",
+    "title": "Ramon Allones Specially Selected · Екатеринбург",
+    "body": "<p>Оценка и заметки взяты из карты екатеринбургской группы в <a href=\"/journal/ramon-allones-dve-karty\">отчёте о международной дегустации</a>. Историческая строка рейтинга объединяет обе карты.</p>",
+    "fields": {
+      "field_date": "2009-11-18",
+      "field_cigar": {
+        "ref": "legacy:ramon-allones-specially-selected"
+      },
+      "field_score_original": "95/89",
+      "field_club_score": 89,
+      "field_event": {
+        "ref": "legacy:meeting-123"
+      },
+      "field_third_first": "Белый перец, шиповник и сухофрукты.",
+      "field_third_second": "К сухофруктам добавились вишнёвая косточка и кофе с корицей.",
+      "field_third_last": "Ржаная корка, пряность, горечь и аммиачный оттенок."
+    },
+    "created": "2009-11-20"
+  },
+  {
+    "id": "legacy:tasting-102",
+    "type": "tasting",
+    "alias": "/tastings/romeo-y-julieta-wide-churchills-2010-09-13",
+    "source": "/tasting.html?item_id=102",
+    "title": "Romeo y Julieta Wide Churchills · сентябрь 2010",
+    "body": "<p>В первой встрече учтены 23 оценки. <a href=\"/journal/wide-churchills-2010\">Отчёт и замечания участников</a>.</p>",
+    "fields": {
+      "field_date": "2010-09-13",
+      "field_cigar": {
+        "ref": "legacy:romeo-y-julieta-wide-churchills"
+      },
+      "field_score_original": "87",
+      "field_club_score": 87,
+      "field_event": {
+        "ref": "legacy:meeting-102"
+      }
+    },
+    "created": "2010-12-22"
+  },
+  {
+    "id": "legacy:tasting-298",
+    "type": "tasting",
+    "alias": "/tastings/romeo-y-julieta-wide-churchills-2011-05-25",
+    "source": "/tasting.html?item_id=298",
+    "title": "Romeo y Julieta Wide Churchills · май 2011",
+    "body": "<p>На повторной встрече собрали 11 оценок. Эта карта относится к дегустации 25 мая, проведённой спустя восемь месяцев после <a href=\"/tastings/romeo-y-julieta-wide-churchills-2010-09-13\">первой встречи</a>.</p>",
+    "fields": {
+      "field_date": "2011-05-25",
+      "field_cigar": {
+        "ref": "legacy:romeo-y-julieta-wide-churchills"
+      },
+      "field_score_original": "90",
+      "field_club_score": 90,
+      "field_event": {
+        "ref": "legacy:meeting-298"
+      }
+    },
+    "created": "2011-05-27"
+  },
+  {
+    "id": "legacy:tasting-146",
+    "type": "tasting",
+    "alias": "/tastings/coronado-by-la-flor-corona-especial-2009-08-07",
+    "source": "/tasting.html?item_id=146",
+    "title": "Coronado by la Flor Corona Especial · запись Александра Клепикова",
+    "body": "<p>В карте указан один дегустатор — Александр Клепиков. Таблица рейтинга дублировала его результат в обеих колонках. <a href=\"/journal/coronado-corona-especial\">Авторская запись</a>.</p>",
+    "fields": {
+      "field_date": "2009-08-07",
+      "field_cigar": {
+        "ref": "legacy:coronado-by-la-flor-corona-especial"
+      },
+      "field_score_original": "96",
+      "field_individual_score": 96,
+      "field_third_first": "В начале Клепиков отметил перец и краткий привкус жжёной резины.",
+      "field_third_second": "Солома и древесина вышли на первый план вместе с перцем и сухофруктами.",
+      "field_third_last": "Среди завершающих нот автор указал крапиву, воск и печёное яблоко."
+    },
+    "created": "2009-08-11"
+  }
+]

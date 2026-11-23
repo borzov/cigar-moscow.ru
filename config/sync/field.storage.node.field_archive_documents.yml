@@ -1,0 +1,23 @@
+uuid: 337c1cb2-84de-4d5b-b31f-16c53343255e
+langcode: ru
+status: true
+dependencies:
+  module:
+    - file
+    - node
+id: node.field_archive_documents
+field_name: field_archive_documents
+entity_type: node
+type: file
+settings:
+  target_type: file
+  display_field: false
+  display_default: false
+  uri_scheme: private
+module: file
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

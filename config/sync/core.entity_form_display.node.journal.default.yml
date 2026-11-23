@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.journal.body
+    - field.field.node.journal.field_archive_documents
     - field.field.node.journal.field_cigars
     - field.field.node.journal.field_cover
     - field.field.node.journal.field_demo
@@ -16,6 +17,7 @@ dependencies:
     - workflows.workflow.editorial
   module:
     - content_moderation
+    - file
     - link
     - media_library
     - path
@@ -40,6 +42,13 @@ content:
     weight: 10
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_archive_documents:
+    type: file_generic
+    weight: 20
+    region: content
+    settings:
+      progress_indicator: throbber
     third_party_settings: {  }
   field_cigars:
     type: entity_reference_autocomplete

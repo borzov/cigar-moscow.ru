@@ -1,0 +1,8 @@
+name: 'Ссылки архива клуба'
+type: module
+description: 'Перенаправляет адреса перенесённых материалов в архиве клуба.'
+package: Клуб
+core_version_requirement: ^11
+dependencies:
+  - drupal:node
+  - drupal:path_alias

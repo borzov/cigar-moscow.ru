@@ -1,0 +1,273 @@
+{
+  "rating_source": "/rating.html",
+  "rating_rows": {
+    "11": {
+      "cigar": "Coronado by la Flor, Corona Especial",
+      "country": "Доминикана",
+      "collective": [
+        {
+          "score": "96",
+          "href": "http://www.cigar-moscow.ru/tasting.html?item_id=146"
+        }
+      ],
+      "individual": [
+        {
+          "score": "96",
+          "href": "http://www.cigar-moscow.ru/tasting.html?item_id=146"
+        }
+      ]
+    },
+    "17": {
+      "cigar": "Ramуn Allones Specially Selected",
+      "country": "Куба",
+      "collective": [
+        {
+          "score": "95/89",
+          "href": "http://www.cigar-moscow.ru/tasting.html?item_id=123"
+        }
+      ],
+      "individual": []
+    },
+    "47": {
+      "cigar": "Macanudo 1968 Gigante",
+      "country": "Доминикана",
+      "collective": [
+        {
+          "score": "89",
+          "href": "http://www.cigar-moscow.ru/tasting.html?item_id=111"
+        }
+      ],
+      "individual": []
+    },
+    "50": {
+      "cigar": "Macanudo 1968 Corona",
+      "country": "Доминикана",
+      "collective": [
+        {
+          "score": "89",
+          "href": "http://www.cigar-moscow.ru/tasting.html?item_id=111"
+        }
+      ],
+      "individual": []
+    },
+    "51": {
+      "cigar": "Macanudo 1968 Robusto",
+      "country": "Доминикана",
+      "collective": [
+        {
+          "score": "89",
+          "href": "http://www.cigar-moscow.ru/tasting.html?item_id=111"
+        }
+      ],
+      "individual": []
+    },
+    "69": {
+      "cigar": "Romeo y Julieta Wide Churchills",
+      "country": "Куба",
+      "collective": [
+        {
+          "score": "87",
+          "href": "http://www.cigar-moscow.ru/tasting.html?item_id=102"
+        },
+        {
+          "score": "90",
+          "href": "/tasting.html?item_id=298"
+        }
+      ],
+      "individual": []
+    },
+    "92": {
+      "cigar": "Romeo y Julieta Cazadores",
+      "country": "Куба",
+      "collective": [
+        {
+          "score": "83",
+          "href": "http://www.cigar-moscow.ru/tasting.html?item_id=102"
+        }
+      ],
+      "individual": []
+    }
+  },
+  "omitted": {
+    "92": "Таблица привязывает Cazadores к обзору Wide Churchills; совместимая дегустационная карта не найдена. Строка сохранена в сверке, карточка и оценка Cazadores не созданы."
+  },
+  "articles": {
+    "879": {
+      "published_in_archive": "2016-09-05",
+      "anchors": [
+        "14 октября",
+        "15 октября",
+        "16 октября",
+        "200 000"
+      ],
+      "editorial_decision": "Черновик: предложение партнёрских пакетов с ценами и условиями размещения рекламы."
+    },
+    "883": {
+      "published_in_archive": "2016-09-20",
+      "anchors": [
+        "7 000",
+        "15 октября"
+      ],
+      "editorial_decision": "Черновик: историческая цена, бронирование и гостиничное предложение. Платёжные реквизиты и личные контакты исключаются из переносимого текста."
+    },
+    "886": {
+      "published_in_archive": "2016-10-15",
+      "anchors": [
+        "14 октября 2016 года",
+        "Али Альбетков",
+        "Ali Albetkov"
+      ],
+      "editorial_decision": "День 1 — 14 октября. Репортаж содержит исторические названия партнёров и представленные продукты. Участники на фото обложки."
+    },
+    "887": {
+      "published_in_archive": "2016-10-19",
+      "anchors": [
+        "Али Альбетков",
+        "Ali Albetkov"
+      ],
+      "editorial_decision": "День 3 — 16 октября по программе 879 и итоговому материалу 888. Отчёт содержит названия партнёров. Для обложки выбран снимок гостей вместо предметной фотографии упаковки."
+    },
+    "888": {
+      "published_in_archive": "2016-10-18",
+      "anchors": [
+        "15 октября",
+        "Дмитрий Грибов"
+      ],
+      "editorial_decision": "Черновики репортажа и альбома: коммерческие презентации партнёров, розыгрыш и упоминания призов. Фактическая карточка второго вечера доступна отдельно."
+    },
+    "111": {
+      "published_in_archive": "2010-04-20",
+      "anchors": [
+        "14 апреля 2010",
+        "Александр Клепиков"
+      ],
+      "editorial_decision": "Три карты одного вечера и три строки рейтинга. В каждой карте учтено пять оценок; оценки участников не переносятся в поле индивидуальной рецензии."
+    },
+    "123": {
+      "published_in_archive": "2009-11-20",
+      "anchors": [
+        "18 ноября 2009",
+        "Екатеринбург",
+        "Москва"
+      ],
+      "editorial_decision": "В таблице одна составная ячейка. Атрибуция 95 Москве и 89 Екатеринбургу взята из двух отдельных карт, а не из порядка чисел в таблице."
+    },
+    "146": {
+      "published_in_archive": "2009-08-11",
+      "anchors": [
+        "7 августа 2009",
+        "Дегустатор : Клепиков Александр"
+      ],
+      "editorial_decision": "В двух колонках один URL. Авторская карта называет единственного дегустатора; числовая клубная оценка оставлена пустой."
+    },
+    "102": {
+      "published_in_archive": "2010-12-22",
+      "anchors": [
+        "13 сентября 2010 года",
+        "23 оценки"
+      ],
+      "editorial_decision": "Строка 69 ведёт к двум встречам. Дополнительная ссылка на эту страницу в строке 92 не доказывает отдельный прокур Cazadores: в статье нет карты этой сигары."
+    },
+    "298": {
+      "published_in_archive": "2011-05-27",
+      "anchors": [
+        "25 мая 2011 года",
+        "11 оценок",
+        "Александр Клепиков",
+        "Руслан Сафин",
+        "Алексей Нехорошев"
+      ],
+      "editorial_decision": "Дата и клубный результат подтверждены отдельно. Полный репортаж включает рекламное описание напитка и импортёра; он перенесён в черновики. У публичной карточки прокура нет коммерческой обложки."
+    }
+  },
+  "observations": {
+    "legacy:tasting-111-gigante": {
+      "rank": 47,
+      "article": 111,
+      "tasted": "2010-04-14",
+      "source_scope": "Macanudo 1968 Gigante Размеры",
+      "until": "Macanudo 1968 Corona Размеры",
+      "score_evidence": "89, 89, 89, 90, 90",
+      "collective": 89,
+      "individual": null,
+      "original": "89"
+    },
+    "legacy:tasting-111-corona": {
+      "rank": 50,
+      "article": 111,
+      "tasted": "2010-04-14",
+      "source_scope": "Macanudo 1968 Corona Размеры",
+      "until": "Macanudo 1968 Robusto Размеры",
+      "score_evidence": "86, 87, 89, 90, 91",
+      "collective": 89,
+      "individual": null,
+      "original": "89"
+    },
+    "legacy:tasting-111-robusto": {
+      "rank": 51,
+      "article": 111,
+      "tasted": "2010-04-14",
+      "source_scope": "Macanudo 1968 Robusto Размеры",
+      "until": null,
+      "score_evidence": "86, 87, 88, 91, 91",
+      "collective": 89,
+      "individual": null,
+      "original": "89"
+    },
+    "legacy:tasting-123-moscow": {
+      "rank": 17,
+      "article": 123,
+      "tasted": "2009-11-18",
+      "source_scope": "(Москва) Дата дегустации",
+      "until": null,
+      "score_evidence": "шкале) – 95",
+      "collective": 95,
+      "individual": null,
+      "original": "95/89"
+    },
+    "legacy:tasting-123-ekaterinburg": {
+      "rank": 17,
+      "article": 123,
+      "tasted": "2009-11-18",
+      "source_scope": "(Екатеринбург) Дата дегустации",
+      "until": "(Москва) Дата дегустации",
+      "score_evidence": "шкале) – 89",
+      "collective": 89,
+      "individual": null,
+      "original": "95/89"
+    },
+    "legacy:tasting-102": {
+      "rank": 69,
+      "article": 102,
+      "tasted": "2010-09-13",
+      "source_scope": "13 сентября 2010 года",
+      "until": null,
+      "score_evidence": "шкале: 87",
+      "collective": 87,
+      "individual": null,
+      "original": "87"
+    },
+    "legacy:tasting-298": {
+      "rank": 69,
+      "article": 298,
+      "tasted": "2011-05-25",
+      "source_scope": "25 мая 2011 года",
+      "until": null,
+      "score_evidence": "шкале): 90",
+      "collective": 90,
+      "individual": null,
+      "original": "90"
+    },
+    "legacy:tasting-146": {
+      "rank": 11,
+      "article": 146,
+      "tasted": "2009-08-07",
+      "source_scope": "Дегустатор : Клепиков Александр",
+      "until": null,
+      "score_evidence": "шкале: 96",
+      "collective": null,
+      "individual": 96,
+      "original": "96"
+    }
+  }
+}
