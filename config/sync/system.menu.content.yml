@@ -1,0 +1,13 @@
+uuid: cd37bdc6-0c58-426b-834d-f3996848e480
+langcode: ru
+status: true
+dependencies:
+  enforced:
+    module:
+      - navigation
+_core:
+  default_config_hash: nqVwm91Uyib_rvFaNPF1MdYqHlmZ38w5rsOVVy4uWDw
+id: content
+label: Содержимое
+description: 'Content task links'
+locked: true

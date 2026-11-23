@@ -1,0 +1,19 @@
+uuid: 28757ce7-dbe6-40a4-b5f4-401b797faa17
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_score_original
+    - node.type.tasting
+id: node.tasting.field_score_original
+field_name: field_score_original
+entity_type: node
+bundle: tasting
+label: 'Оценка в источнике'
+description: 'Перепишите оценку с обозначением шкалы из источника. Для повторного прокура той же сигары создайте отдельную запись со своей датой. Для исправления того же протокола обновите существующую запись.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

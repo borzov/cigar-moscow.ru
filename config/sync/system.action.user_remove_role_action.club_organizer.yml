@@ -1,0 +1,14 @@
+uuid: e2e93540-091c-4fee-a9f3-df8861d4dbce
+langcode: ru
+status: true
+dependencies:
+  config:
+    - user.role.club_organizer
+  module:
+    - user
+id: user_remove_role_action.club_organizer
+label: 'Удалить роль Организатор клуба из выбранных пользователей'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: club_organizer

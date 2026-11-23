@@ -1,0 +1,14 @@
+uuid: d4ffae01-7a02-4f90-ace5-5a5e5f229a1e
+langcode: ru
+status: true
+dependencies:
+  config:
+    - user.role.club_editor
+  module:
+    - user
+id: user_add_role_action.club_editor
+label: 'Добавьте роль Редактор клуба выбранным пользователям'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: club_editor

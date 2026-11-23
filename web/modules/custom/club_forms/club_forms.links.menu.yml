@@ -1,0 +1,5 @@
+club_forms.applications:
+  title: 'Заявки клуба'
+  description: 'Заявки на вступление и участие в фестивалях.'
+  route_name: club_forms.applications
+  parent: system.admin_content

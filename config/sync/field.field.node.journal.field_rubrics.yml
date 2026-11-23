@@ -1,0 +1,24 @@
+uuid: 23da8430-8fa2-405f-b7f0-fa1858caedca
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_rubrics
+    - node.type.journal
+    - taxonomy.vocabulary.club_rubrics
+id: node.journal.field_rubrics
+field_name: field_rubrics
+entity_type: node
+bundle: journal
+label: Рубрики
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      club_rubrics: club_rubrics
+field_type: entity_reference

@@ -1,0 +1,21 @@
+uuid: cee49fb7-0f7c-4892-ad69-cabaca4f4249
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_end
+    - node.type.festival
+  module:
+    - datetime
+id: node.festival.field_end
+field_name: field_end
+entity_type: node
+bundle: festival
+label: 'Дата окончания'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

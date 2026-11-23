@@ -1,0 +1,9 @@
+uuid: db1d5b5e-1bb8-4beb-8e7c-e2e7c18ddd5f
+langcode: ru
+status: true
+dependencies: {  }
+name: 'Рубрики журнала'
+vid: club_rubrics
+description: null
+weight: 0
+new_revision: false

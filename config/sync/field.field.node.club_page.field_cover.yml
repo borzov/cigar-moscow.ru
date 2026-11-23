@@ -1,0 +1,24 @@
+uuid: 763a280a-c10c-4ee3-9f1a-a01a810565ea
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_cover
+    - media.type.image
+    - node.type.club_page
+id: node.club_page.field_cover
+field_name: field_cover
+entity_type: node
+bundle: club_page
+label: Обложка
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+field_type: entity_reference

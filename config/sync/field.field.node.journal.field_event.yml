@@ -1,0 +1,24 @@
+uuid: be00bfa9-9bad-4a59-82c1-1b8282c8ea40
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_event
+    - node.type.event
+    - node.type.journal
+id: node.journal.field_event
+field_name: field_event
+entity_type: node
+bundle: journal
+label: 'Связанное событие'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      event: event
+field_type: entity_reference

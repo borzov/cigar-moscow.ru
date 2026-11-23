@@ -1,0 +1,22 @@
+uuid: 5223a37a-8d4a-4b13-85c6-2b66a6f49a5b
+langcode: ru
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - aficionados
+_core:
+  default_config_hash: _6wMlr1YY9Iv3GD2FtllhPD5hiz-c8n-CkriHxmVOWo
+id: aficionados_content
+theme: aficionados
+region: content
+weight: 0
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  label_display: '0'
+  provider: system
+visibility: {  }

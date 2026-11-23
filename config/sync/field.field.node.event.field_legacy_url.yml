@@ -1,0 +1,23 @@
+uuid: 4835ace7-9d60-4035-b98f-7d7527f590d9
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_legacy_url
+    - node.type.event
+  module:
+    - link
+id: node.event.field_legacy_url
+field_name: field_legacy_url
+entity_type: node
+bundle: event
+label: 'Страница источника'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 0
+  link_type: 16
+field_type: link

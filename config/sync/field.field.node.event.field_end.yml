@@ -1,0 +1,21 @@
+uuid: 4bd8b56d-8def-4f8a-8690-1fe2941d780d
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_end
+    - node.type.event
+  module:
+    - datetime
+id: node.event.field_end
+field_name: field_end
+entity_type: node
+bundle: event
+label: 'Дата окончания'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

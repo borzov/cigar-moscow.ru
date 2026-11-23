@@ -1,0 +1,123 @@
+uuid: 8b74a2de-d997-447a-852e-90694ccce698
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.field.node.festival.body
+    - field.field.node.festival.field_cover
+    - field.field.node.festival.field_date
+    - field.field.node.festival.field_demo
+    - field.field.node.festival.field_end
+    - field.field.node.festival.field_legacy_url
+    - field.field.node.festival.field_program
+    - field.field.node.festival.field_promote
+    - field.field.node.festival.field_reg_end
+    - field.field.node.festival.field_reg_start
+    - field.field.node.festival.field_source_id
+    - field.field.node.festival.field_year
+    - node.type.festival
+  module:
+    - datetime
+    - link
+    - text
+    - user
+id: node.festival.default
+targetEntityType: node
+bundle: festival
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
+  field_cover:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_date:
+    type: datetime_custom
+    label: above
+    settings:
+      timezone_override: ''
+      date_format: d.m.Y
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_end:
+    type: datetime_custom
+    label: above
+    settings:
+      timezone_override: ''
+      date_format: d.m.Y
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_legacy_url:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 9
+    region: content
+  field_program:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 8
+    region: content
+  field_reg_end:
+    type: datetime_custom
+    label: above
+    settings:
+      timezone_override: ''
+      date_format: d.m.Y
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_reg_start:
+    type: datetime_custom
+    label: above
+    settings:
+      timezone_override: ''
+      date_format: d.m.Y
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_year:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_demo: true
+  field_promote: true
+  field_source_id: true
+  langcode: true

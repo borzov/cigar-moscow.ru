@@ -1,0 +1,23 @@
+uuid: c805982c-6b04-4677-982b-e053aa8f5aad
+langcode: ru
+status: true
+dependencies:
+  config:
+    - node.type.album
+  module:
+    - node
+id: album
+label: Фотоальбом
+type: 'canonical_entities:node'
+pattern: '/albums/[node:title]'
+selection_criteria:
+  7f0b26ba-0a52-4fed-8443-3e836e3947cc:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      album: album
+selection_logic: and
+weight: 0
+relationships: {  }

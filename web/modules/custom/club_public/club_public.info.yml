@@ -1,0 +1,13 @@
+name: Club public pages
+type: module
+description: Public catalogue, calendar, rating and related club materials.
+package: Aficionados
+core_version_requirement: ^11
+dependencies:
+  - drupal:node
+  - drupal:media
+  - drupal:image
+  - drupal:language
+  - club_forms:club_forms
+  - drupal:path_alias
+  - drupal:menu_link_content

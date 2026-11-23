@@ -1,0 +1,58 @@
+uuid: 637840eb-4a71-4a05-b270-348070996476
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.club_rubrics.field_slug
+    - taxonomy.vocabulary.club_rubrics
+  module:
+    - path
+    - text
+id: taxonomy_term.club_rubrics.default
+targetEntityType: taxonomy_term
+bundle: club_rubrics
+mode: default
+content:
+  description:
+    type: text_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 100
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+hidden:
+  field_slug: true

@@ -1,0 +1,22 @@
+uuid: 037f70f8-adaf-44d9-be98-709bba83c8a2
+langcode: ru
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - aficionados
+_core:
+  default_config_hash: vfIprSJicukm9qJodHandRBsqNdAnPKI7-rqzpPLgTc
+id: aficionados_messages
+theme: aficionados
+region: highlighted
+weight: 0
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Status messages'
+  label_display: '0'
+  provider: system
+visibility: {  }

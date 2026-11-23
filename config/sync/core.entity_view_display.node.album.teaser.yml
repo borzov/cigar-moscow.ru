@@ -1,0 +1,60 @@
+uuid: 696dc159-2c7f-4b7b-938b-db745019cd81
+langcode: ru
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.album.body
+    - field.field.node.album.field_cover
+    - field.field.node.album.field_date
+    - field.field.node.album.field_demo
+    - field.field.node.album.field_event
+    - field.field.node.album.field_festival
+    - field.field.node.album.field_images
+    - field.field.node.album.field_legacy_url
+    - field.field.node.album.field_source_id
+    - node.type.album
+  module:
+    - text
+    - user
+id: node.album.teaser
+targetEntityType: node
+bundle: album
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
+  field_cover:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_date: true
+  field_demo: true
+  field_event: true
+  field_festival: true
+  field_images: true
+  field_legacy_url: true
+  field_source_id: true
+  langcode: true

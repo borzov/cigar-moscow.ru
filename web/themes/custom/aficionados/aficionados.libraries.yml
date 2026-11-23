@@ -1,0 +1,9 @@
+site:
+  css:
+    theme:
+      css/site.css: {}
+  js:
+    js/age.js: {}
+  dependencies:
+    - core/drupal
+    - core/once

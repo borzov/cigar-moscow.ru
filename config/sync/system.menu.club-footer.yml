@@ -1,0 +1,10 @@
+uuid: f1ab89ac-f891-4a82-96f6-c2da1ee9d792
+langcode: ru
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: 1jksVALEN3DFBpLYDKihvdOTgxxPhLhBpH1xrk9ygRQ
+id: club-footer
+label: 'Подвал клуба'
+description: ''
+locked: false

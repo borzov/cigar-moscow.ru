@@ -1,0 +1,46 @@
+services:
+  web:
+    build: ./docker
+    ports:
+      - "127.0.0.1:${CLUB_PORT:-8093}:80"
+    environment:
+      MYSQL_DATABASE: club
+      MYSQL_USER: club
+      MYSQL_PASSWORD: ${CLUB_DB_PASSWORD:?Run scripts/local first}
+      DRUPAL_HASH_SALT: ${CLUB_HASH_SALT:?Run scripts/local first}
+      CLUB_LOCAL: "1"
+      CLUB_TFA_KEY: ${CLUB_TFA_KEY:?Run scripts/local first}
+      DRUSH_OPTIONS_URI: http://localhost:${CLUB_PORT:-8093}
+      COMPOSER_CACHE_DIR: /var/cache/composer
+    volumes:
+      - .:/opt/drupal
+      - dependencies:/opt/drupal/vendor
+      - core:/opt/drupal/web/core
+      - private_data:/opt/drupal/private
+      - uploads:/opt/drupal/web/sites/default/files
+      - composer_cache:/var/cache/composer
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: club
+      MYSQL_USER: club
+      MYSQL_PASSWORD: ${CLUB_DB_PASSWORD:?Run scripts/local first}
+      MYSQL_ROOT_HOST: localhost
+      MYSQL_ROOT_PASSWORD: ${CLUB_DB_ROOT_PASSWORD:?Run scripts/local first}
+    volumes:
+      - database:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 --silent"]
+      interval: 3s
+      retries: 30
+      timeout: 3s
+volumes:
+  database:
+  private_data:
+  dependencies:
+  core:
+  uploads:
+  composer_cache:

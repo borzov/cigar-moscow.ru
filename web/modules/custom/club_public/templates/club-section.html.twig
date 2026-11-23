@@ -1,0 +1,21 @@
+<section class="club-section">
+  {% if title %}<h2>{{ title }}</h2>{% endif %}
+  {% if rows %}
+    <ul class="club-list">
+      {% for row in rows %}
+        <li>
+          {{ row.cover }}
+          <div class="club-list__content">
+            {% if row.date %}<time datetime="{{ row.date }}">{{ row.date|date('d.m.Y', 'UTC') }}</time>{% endif %}
+            <div class="club-list__title">{{ row.link }}</div>
+            {% if row.score is defined and row.score is not null %}<span class="club-score">{{ row.score }} / 100</span>{% endif %}
+            {{ row.summary }}
+            {% if row.demo %}<small>Демонстрационный материал</small>{% endif %}
+            {% if row.source %}<div>{{ row.source }}</div>{% endif %}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% elseif empty %}<p>{{ empty }}</p>{% endif %}
+  {% if more %}<p>{{ more }}</p>{% endif %}
+</section>

@@ -1,0 +1,24 @@
+uuid: cf8ca2e0-1c53-47dd-8b23-c7957b7de6fc
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_cover
+    - media.type.image
+    - node.type.album
+id: node.album.field_cover
+field_name: field_cover
+entity_type: node
+bundle: album
+label: Обложка
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+field_type: entity_reference

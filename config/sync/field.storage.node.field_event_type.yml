@@ -1,0 +1,30 @@
+uuid: a8cd9b65-3098-4b68-9847-b28dcb041e75
+langcode: ru
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_event_type
+field_name: field_event_type
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: club
+      label: 'Клубная встреча'
+    -
+      value: world_festival
+      label: 'Мировой фестиваль'
+    -
+      value: other
+      label: 'Другое событие'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

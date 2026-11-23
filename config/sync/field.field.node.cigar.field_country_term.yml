@@ -1,0 +1,24 @@
+uuid: 98abb6c3-05f2-40fc-9091-22c0a1f36b6b
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_country_term
+    - node.type.cigar
+    - taxonomy.vocabulary.club_countries
+id: node.cigar.field_country_term
+field_name: field_country_term
+entity_type: node
+bundle: cigar
+label: Страна
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      club_countries: club_countries
+field_type: entity_reference

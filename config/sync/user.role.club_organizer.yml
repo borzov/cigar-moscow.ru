@@ -1,0 +1,16 @@
+uuid: 0e74afe0-c6d2-4cb4-8d32-610a7d708206
+langcode: ru
+status: true
+dependencies:
+  module:
+    - club_forms
+    - navigation
+    - system
+id: club_organizer
+label: 'Организатор клуба'
+weight: 6
+is_admin: false
+permissions:
+  - 'access administration pages'
+  - 'access navigation'
+  - 'view private club applications'

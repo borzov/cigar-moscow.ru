@@ -1,0 +1,19 @@
+uuid: 5ca6877d-7b11-4402-9f10-3cebe9090d31
+langcode: ru
+status: true
+dependencies:
+  module:
+    - node
+    - text
+id: node.field_program
+field_name: field_program
+entity_type: node
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

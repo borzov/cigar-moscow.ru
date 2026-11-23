@@ -1,0 +1,11 @@
+name: Aficionados
+type: theme
+base theme: false
+description: A minimal public Twig theme for the Moscow Cigar Club.
+core_version_requirement: ^11
+libraries:
+  - aficionados/site
+regions:
+  highlighted: 'Messages'
+  help: 'Help'
+  content: 'Main content'

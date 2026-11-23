@@ -1,0 +1,3 @@
+view private club applications:
+  title: 'Просмотр заявок клуба и контактных данных'
+  restrict access: true

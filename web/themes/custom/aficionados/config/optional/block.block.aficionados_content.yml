@@ -1,0 +1,19 @@
+langcode: ru
+status: true
+dependencies:
+  theme:
+    - aficionados
+  module:
+    - system
+id: aficionados_content
+theme: aficionados
+region: content
+weight: 0
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  label_display: '0'
+  provider: system
+visibility: {  }

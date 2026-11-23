@@ -1,0 +1,8 @@
+<section class="club-feature{{ hero ? ' club-feature--hero' }}">
+  {% if hero %}<h1>{{ label }}</h1>{% else %}<h2>{{ label }}</h2>{% endif %}
+  {{ cover }}
+  <p class="club-feature__name">{{ link }}</p>
+  <time datetime="{{ date }}">{{ date|date('d.m.Y', 'UTC') }}</time>
+  {% if days > 0 %}<p>Дней до фестиваля: {{ days }}</p>{% elseif days is same as(0) %}<p>Открытие сегодня</p>{% endif %}
+  {% if registration %}<p>{{ registration }}</p>{% endif %}
+</section>

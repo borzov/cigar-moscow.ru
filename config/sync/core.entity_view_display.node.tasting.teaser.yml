@@ -1,0 +1,70 @@
+uuid: abf7b5ac-3b6f-4736-b13a-36822bcc917e
+langcode: ru
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.tasting.body
+    - field.field.node.tasting.field_cigar
+    - field.field.node.tasting.field_club_score
+    - field.field.node.tasting.field_cover
+    - field.field.node.tasting.field_date
+    - field.field.node.tasting.field_demo
+    - field.field.node.tasting.field_event
+    - field.field.node.tasting.field_individual_score
+    - field.field.node.tasting.field_legacy_url
+    - field.field.node.tasting.field_score_original
+    - field.field.node.tasting.field_source_id
+    - field.field.node.tasting.field_third_first
+    - field.field.node.tasting.field_third_last
+    - field.field.node.tasting.field_third_second
+    - node.type.tasting
+  module:
+    - text
+    - user
+id: node.tasting.teaser
+targetEntityType: node
+bundle: tasting
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
+  field_cover:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_cigar: true
+  field_club_score: true
+  field_date: true
+  field_demo: true
+  field_event: true
+  field_individual_score: true
+  field_legacy_url: true
+  field_score_original: true
+  field_source_id: true
+  field_third_first: true
+  field_third_last: true
+  field_third_second: true
+  langcode: true

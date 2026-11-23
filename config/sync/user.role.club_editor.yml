@@ -1,0 +1,89 @@
+uuid: c57899ce-971e-43e8-94cf-afc64dc12e43
+langcode: ru
+status: true
+dependencies:
+  config:
+    - filter.format.basic_html
+    - media.type.image
+    - node.type.album
+    - node.type.cigar
+    - node.type.club_page
+    - node.type.event
+    - node.type.festival
+    - node.type.journal
+    - node.type.tasting
+    - taxonomy.vocabulary.club_brands
+    - taxonomy.vocabulary.club_countries
+    - taxonomy.vocabulary.club_rubrics
+    - workflows.workflow.editorial
+  module:
+    - content_moderation
+    - content_translation
+    - filter
+    - media
+    - navigation
+    - node
+    - path
+    - system
+    - taxonomy
+id: club_editor
+label: 'Редактор клуба'
+weight: 5
+is_admin: false
+permissions:
+  - 'access administration pages'
+  - 'access content overview'
+  - 'access media overview'
+  - 'access navigation'
+  - 'access taxonomy overview'
+  - 'create album content'
+  - 'create cigar content'
+  - 'create club_page content'
+  - 'create content translations'
+  - 'create event content'
+  - 'create festival content'
+  - 'create image media'
+  - 'create journal content'
+  - 'create tasting content'
+  - 'create terms in club_brands'
+  - 'create terms in club_countries'
+  - 'create terms in club_rubrics'
+  - 'create url aliases'
+  - 'edit any album content'
+  - 'edit any cigar content'
+  - 'edit any club_page content'
+  - 'edit any event content'
+  - 'edit any festival content'
+  - 'edit any image media'
+  - 'edit any journal content'
+  - 'edit any tasting content'
+  - 'edit own album content'
+  - 'edit own cigar content'
+  - 'edit own club_page content'
+  - 'edit own event content'
+  - 'edit own festival content'
+  - 'edit own image media'
+  - 'edit own journal content'
+  - 'edit own tasting content'
+  - 'edit terms in club_brands'
+  - 'edit terms in club_countries'
+  - 'edit terms in club_rubrics'
+  - 'translate club_page node'
+  - 'update content translations'
+  - 'use editorial transition archive'
+  - 'use editorial transition archived_draft'
+  - 'use editorial transition archived_published'
+  - 'use editorial transition create_new_draft'
+  - 'use editorial transition publish'
+  - 'use text format basic_html'
+  - 'view album revisions'
+  - 'view any unpublished content'
+  - 'view cigar revisions'
+  - 'view club_page revisions'
+  - 'view event revisions'
+  - 'view festival revisions'
+  - 'view journal revisions'
+  - 'view latest version'
+  - 'view own unpublished content'
+  - 'view own unpublished media'
+  - 'view tasting revisions'

@@ -1,0 +1,13 @@
+uuid: d481b1ad-c990-4c02-b8ec-7a791ea6fccd
+langcode: ru
+status: false
+dependencies:
+  config:
+    - simple_sitemap.type.index
+_core:
+  default_config_hash: WffB95XdMvoUEvymTyLFLB-Q_JnCbbjy9Kj7TvlzN9s
+id: index
+label: 'Индекс карт сайта'
+description: 'Индекс карт сайта со списком всех остальных карт сайта — полезен, если есть хотя бы две другие карты сайта. В большинстве случаев эта карта сайта должна быть последней в очереди генерации и назначена картой сайта по умолчанию.'
+type: index
+weight: 1000

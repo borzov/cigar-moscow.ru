@@ -1,0 +1,9 @@
+uuid: 2a5ad959-8477-4974-89c2-79af27a8042c
+langcode: ru
+status: true
+dependencies: {  }
+name: 'Марки сигар'
+vid: club_brands
+description: null
+weight: 0
+new_revision: false

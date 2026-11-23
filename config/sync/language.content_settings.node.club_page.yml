@@ -1,0 +1,16 @@
+uuid: 7b209438-da9a-432e-adf9-3804faccc3d2
+langcode: ru
+status: true
+dependencies:
+  config:
+    - node.type.club_page
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: node.club_page
+target_entity_type_id: node
+target_bundle: club_page
+default_langcode: ru
+language_alterable: true

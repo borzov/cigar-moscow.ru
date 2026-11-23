@@ -1,0 +1,21 @@
+uuid: 9e98f143-5656-4acb-8844-b8be57fa21b6
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_date
+    - node.type.festival
+  module:
+    - datetime
+id: node.festival.field_date
+field_name: field_date
+entity_type: node
+bundle: festival
+label: Дата
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

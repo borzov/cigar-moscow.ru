@@ -1,0 +1,19 @@
+langcode: ru
+status: true
+dependencies:
+  theme:
+    - aficionados
+  module:
+    - system
+id: aficionados_messages
+theme: aficionados
+region: highlighted
+weight: 0
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Status messages'
+  label_display: '0'
+  provider: system
+visibility: {  }

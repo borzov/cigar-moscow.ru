@@ -1,0 +1,21 @@
+uuid: 92f3c388-8273-4cf7-9fdf-74bb31ea054e
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_demo
+    - node.type.festival
+id: node.festival.field_demo
+field_name: field_demo
+entity_type: node
+bundle: festival
+label: 'Демонстрационный материал'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: Вкл
+  off_label: Выкл
+field_type: boolean

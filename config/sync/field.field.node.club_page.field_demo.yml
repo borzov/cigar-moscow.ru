@@ -1,0 +1,21 @@
+uuid: 2f6f344b-362f-40bc-9dee-60bc876a3e01
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_demo
+    - node.type.club_page
+id: node.club_page.field_demo
+field_name: field_demo
+entity_type: node
+bundle: club_page
+label: 'Демонстрационный материал'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: Вкл
+  off_label: Выкл
+field_type: boolean

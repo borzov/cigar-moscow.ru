@@ -1,0 +1,14 @@
+uuid: 070d52cd-8e61-49bf-bc91-9a26cc3b87bb
+langcode: ru
+status: true
+dependencies:
+  config:
+    - user.role.club_editor
+  module:
+    - user
+id: user_remove_role_action.club_editor
+label: 'Удалить роль Редактор клуба из выбранных пользователей'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: club_editor

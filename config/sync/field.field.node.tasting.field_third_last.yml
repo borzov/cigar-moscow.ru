@@ -1,0 +1,19 @@
+uuid: 4ef64eba-2efe-4d7d-b8d6-02fe5223e7f5
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_third_last
+    - node.type.tasting
+id: node.tasting.field_third_last
+field_name: field_third_last
+entity_type: node
+bundle: tasting
+label: 'Последняя треть'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

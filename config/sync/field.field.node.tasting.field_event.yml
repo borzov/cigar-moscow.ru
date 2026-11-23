@@ -1,0 +1,24 @@
+uuid: 84b3b27f-25cc-435b-b606-cb9b587a8261
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_event
+    - node.type.event
+    - node.type.tasting
+id: node.tasting.field_event
+field_name: field_event
+entity_type: node
+bundle: tasting
+label: 'Связанное событие'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      event: event
+field_type: entity_reference

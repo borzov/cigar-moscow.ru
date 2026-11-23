@@ -1,0 +1,14 @@
+uuid: 1732f852-31fc-418d-a8d5-5db13c095083
+langcode: ru
+status: true
+dependencies:
+  config:
+    - user.role.club_author
+  module:
+    - user
+id: user_add_role_action.club_author
+label: 'Добавьте роль Автор клуба выбранным пользователям'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: club_author

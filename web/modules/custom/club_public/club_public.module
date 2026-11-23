@@ -1,0 +1,69 @@
+<?php
+
+use Drupal\club_public\Controller\Catalogue;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function club_public_theme(): array {
+  return [
+    'club_section' => [
+      'variables' => ['title' => NULL, 'rows' => [], 'empty' => '', 'more' => NULL],
+    ],
+    'club_hero' => [
+      'variables' => ['title' => '', 'cover' => NULL, 'body' => NULL],
+    ],
+    'club_picture' => [
+      'variables' => ['image' => NULL, 'caption' => NULL, 'credit' => NULL],
+    ],
+    'club_feature' => [
+      'variables' => ['hero' => FALSE, 'cover' => NULL, 'label' => '', 'link' => NULL, 'date' => '', 'days' => NULL, 'registration' => NULL],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for nodes.
+ */
+function club_public_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode): void {
+  if ($view_mode === 'full' && $entity instanceof NodeInterface && in_array($entity->bundle(), ['club_page', 'cigar', 'festival', 'event'], TRUE)) {
+    $build['club_related'] = Catalogue::create(\Drupal::getContainer())->related($entity);
+    $build['club_related']['#weight'] = 50;
+  }
+}
+
+/**
+ * Implements hook_simple_sitemap_links_alter().
+ */
+function club_public_simple_sitemap_links_alter(array &$links): void {
+  $routes = [];
+  foreach ($links as $key => $link) {
+    $path = $link['meta']['path'] ?? NULL;
+    // For node pages Simple XML Sitemap already checks actual translations.
+    if ($path === NULL || str_starts_with($path, 'node/')) {
+      continue;
+    }
+    if (!isset($routes[$path])) {
+      $url = \Drupal::service('path.validator')->getUrlIfValidWithoutAccessCheck('/' . ltrim($path, '/'));
+      $routes[$path] = $url && $url->isRouted() ? $url->getRouteName() : '';
+    }
+    if ($path === '' || $routes[$path] === '<front>' || \Drupal\club_public\EventSubscriber\PublicLanguageSubscriber::russianRoute($routes[$path])) {
+      if (($link['langcode'] ?? NULL) === 'en') {
+        unset($links[$key]);
+      }
+      else {
+        unset($links[$key]['alternate_urls']['en']);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function club_public_entity_type_alter(array &$entity_types): void {
+  $entity_types['node']->addConstraint('ClubEditorial');
+}

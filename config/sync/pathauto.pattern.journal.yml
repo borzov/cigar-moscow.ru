@@ -1,0 +1,23 @@
+uuid: 3e2b3914-89a4-4c22-a5ee-33c4f909b459
+langcode: ru
+status: true
+dependencies:
+  config:
+    - node.type.journal
+  module:
+    - node
+id: journal
+label: 'Материал журнала'
+type: 'canonical_entities:node'
+pattern: '/journal/[node:title]'
+selection_criteria:
+  0c391720-79cd-42a6-a3ad-7610113cb582:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      journal: journal
+selection_logic: and
+weight: 0
+relationships: {  }

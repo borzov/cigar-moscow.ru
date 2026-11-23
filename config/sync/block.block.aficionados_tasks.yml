@@ -1,0 +1,22 @@
+uuid: 2fd5135f-ac5a-406e-a81c-99dec044d314
+langcode: ru
+status: true
+dependencies:
+  theme:
+    - aficionados
+_core:
+  default_config_hash: ZYGCsIRZuoLw6XuIRLoWtDlhR228qTIpzG03wQVL9f0
+id: aficionados_tasks
+theme: aficionados
+region: content
+weight: -10
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: Tabs
+  label_display: '0'
+  provider: core
+  primary: true
+  secondary: true
+visibility: {  }

@@ -1,0 +1,6 @@
+services:
+  club_public.language_redirect:
+    class: Drupal\club_public\EventSubscriber\PublicLanguageSubscriber
+    arguments: ['@language_manager']
+    tags:
+      - { name: event_subscriber }

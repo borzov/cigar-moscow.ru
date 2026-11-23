@@ -1,0 +1,111 @@
+club_public.home:
+  path: '/home'
+  defaults:
+    _controller: '\Drupal\club_public\Controller\Catalogue::home'
+    _title: ''
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: TRUE
+
+club_public.events:
+  path: '/events'
+  defaults:
+    _controller: '\Drupal\club_public\Controller\Catalogue::events'
+    _title: 'События'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: TRUE
+
+club_public.festival:
+  path: '/festival'
+  defaults:
+    _controller: '\Drupal\club_public\Controller\Catalogue::festivals'
+    _title: 'Фестиваль'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: TRUE
+
+club_public.cigars:
+  path: '/cigars'
+  defaults:
+    _controller: '\Drupal\club_public\Controller\Catalogue::listing'
+    _title: 'Сигары'
+    section: 'cigars'
+  requirements:
+    _permission: 'access content'
+
+club_public.tastings:
+  path: '/tastings'
+  defaults:
+    _controller: '\Drupal\club_public\Controller\Catalogue::listing'
+    _title: 'Дегустации'
+    section: 'tastings'
+  requirements:
+    _permission: 'access content'
+
+club_public.journal:
+  path: '/journal'
+  defaults:
+    _controller: '\Drupal\club_public\Controller\Catalogue::listing'
+    _title: 'Журнал'
+    section: 'journal'
+  requirements:
+    _permission: 'access content'
+
+club_public.gallery:
+  path: '/gallery'
+  defaults:
+    _controller: '\Drupal\club_public\Controller\Catalogue::listing'
+    _title: 'Галерея'
+    section: 'gallery'
+  requirements:
+    _permission: 'access content'
+
+club_public.rating:
+  path: '/rating'
+  defaults:
+    _controller: '\Drupal\club_public\Controller\Catalogue::rating'
+    _title: 'Клубный рейтинг сигар'
+  requirements:
+    _permission: 'access content'
+
+club_public.archive:
+  path: '/events/archive'
+  defaults:
+    _controller: '\Drupal\club_public\Controller\Catalogue::listing'
+    _title: 'Архив событий'
+    section: 'archive'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: TRUE
+
+club_public.travel:
+  path: '/events/world'
+  defaults:
+    _controller: '\Drupal\club_public\Controller\Catalogue::listing'
+    _title: 'Мировые фестивали и поездки'
+    section: 'travel'
+  requirements:
+    _permission: 'access content'
+
+club_public.rubric:
+  path: '/journal/rubric/{rubric}'
+  defaults:
+    _controller: '\Drupal\club_public\Controller\Catalogue::rubric'
+    _title_callback: '\Drupal\club_public\Controller\Catalogue::rubricTitle'
+  requirements:
+    _permission: 'access content'
+    rubric: '[a-z0-9_-]+'
+
+club_public.pairings:
+  path: '/cigars/pairings'
+  defaults:
+    _controller: '\Drupal\club_public\Controller\Catalogue::listing'
+    _title: 'Сигарные сочетания'
+    section: 'pairings'
+  requirements:
+    _permission: 'access content'

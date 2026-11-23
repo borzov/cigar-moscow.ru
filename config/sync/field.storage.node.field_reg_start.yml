@@ -1,0 +1,20 @@
+uuid: 14d25794-25bd-4424-845e-715b2ad3e1e8
+langcode: ru
+status: true
+dependencies:
+  module:
+    - datetime
+    - node
+id: node.field_reg_start
+field_name: field_reg_start
+entity_type: node
+type: datetime
+settings:
+  datetime_type: date
+module: datetime
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

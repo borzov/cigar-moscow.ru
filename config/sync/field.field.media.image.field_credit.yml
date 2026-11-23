@@ -1,0 +1,19 @@
+uuid: 87e146dd-74cc-4380-8ee2-a3a59fcfddca
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_credit
+    - media.type.image
+id: media.image.field_credit
+field_name: field_credit
+entity_type: media
+bundle: image
+label: 'Подпись и источник фотографии'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

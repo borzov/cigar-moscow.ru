@@ -1,0 +1,14 @@
+uuid: 62ba689e-7ceb-4046-9d30-f6fc9365e0af
+langcode: ru
+status: true
+dependencies:
+  config:
+    - user.role.club_organizer
+  module:
+    - user
+id: user_add_role_action.club_organizer
+label: 'Добавьте роль Организатор клуба выбранным пользователям'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: club_organizer

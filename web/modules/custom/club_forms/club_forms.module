@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Retention for private club applications.
+ */
+
+/**
+ * Implements hook_cron().
+ */
+function club_forms_cron(): void {
+  \Drupal::database()->delete('club_application')
+    ->condition('consented', \Drupal::time()->getRequestTime() - 90 * 86400, '<=')
+    ->execute();
+}

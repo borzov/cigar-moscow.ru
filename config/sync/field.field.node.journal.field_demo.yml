@@ -1,0 +1,21 @@
+uuid: 4011c13c-6ebd-4e5b-b8f4-60ab87a77e1f
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_demo
+    - node.type.journal
+id: node.journal.field_demo
+field_name: field_demo
+entity_type: node
+bundle: journal
+label: 'Демонстрационный материал'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: Вкл
+  off_label: Выкл
+field_type: boolean

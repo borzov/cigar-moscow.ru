@@ -1,0 +1,21 @@
+uuid: dfeda675-1db5-48b4-98da-5cc84d0fd7e3
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_date
+    - node.type.album
+  module:
+    - datetime
+id: node.album.field_date
+field_name: field_date
+entity_type: node
+bundle: album
+label: Дата
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

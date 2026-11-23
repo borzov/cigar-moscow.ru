@@ -1,0 +1,14 @@
+uuid: 7d097049-3c5d-4fad-8018-ca9f2c84194b
+langcode: ru
+status: true
+dependencies:
+  config:
+    - user.role.club_author
+  module:
+    - user
+id: user_remove_role_action.club_author
+label: 'Удалить роль Автор клуба из выбранных пользователей'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: club_author

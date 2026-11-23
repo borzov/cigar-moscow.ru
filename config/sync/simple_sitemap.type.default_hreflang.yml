@@ -1,0 +1,15 @@
+uuid: 27da082b-680e-4874-a487-a350e6c0d852
+langcode: ru
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: yaHZPVGZtW3BUvzzdMgc4ed5l4GCiFjcgYlLZmupcqA
+id: default_hreflang
+label: 'Hreflang по умолчанию'
+description: 'Тип карты сайта hreflang по умолчанию. Карты сайта этого типа понятны большинству современных поисковых систем.'
+sitemap_generator: default
+url_generators:
+  - custom
+  - entity
+  - entity_menu_link_content
+  - arbitrary

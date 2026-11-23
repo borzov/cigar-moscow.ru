@@ -1,0 +1,8 @@
+name: 'Заявки клуба'
+type: module
+description: 'Частные заявки на вступление и регистрацию на фестивали.'
+package: Клуб
+core_version_requirement: ^11
+dependencies:
+  - drupal:node
+  - drupal:datetime

@@ -1,0 +1,23 @@
+uuid: 4d96dd6b-8aac-45ce-b30e-7d6c117684b3
+langcode: ru
+status: true
+dependencies:
+  config:
+    - node.type.club_page
+  module:
+    - node
+id: club_page
+label: 'Страница клуба'
+type: 'canonical_entities:node'
+pattern: '/club/[node:title]'
+selection_criteria:
+  3cc39633-9a1f-4793-8b52-44e24e7530ac:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      club_page: club_page
+selection_logic: and
+weight: 0
+relationships: {  }

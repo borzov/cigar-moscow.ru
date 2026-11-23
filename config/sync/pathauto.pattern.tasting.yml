@@ -1,0 +1,23 @@
+uuid: 613f8e5b-0bb1-4e25-8cfc-72175a2009a7
+langcode: ru
+status: true
+dependencies:
+  config:
+    - node.type.tasting
+  module:
+    - node
+id: tasting
+label: Дегустация
+type: 'canonical_entities:node'
+pattern: '/tastings/[node:title]'
+selection_criteria:
+  76f3c6db-e3d5-45d5-bc4c-138499ce9076:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      tasting: tasting
+selection_logic: and
+weight: 0
+relationships: {  }

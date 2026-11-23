@@ -1,0 +1,21 @@
+uuid: de5d5d01-a252-4844-8632-2bdc8b5f96c5
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_reg_start
+    - node.type.festival
+  module:
+    - datetime
+id: node.festival.field_reg_start
+field_name: field_reg_start
+entity_type: node
+bundle: festival
+label: 'Открытие регистрации'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

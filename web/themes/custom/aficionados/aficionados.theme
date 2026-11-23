@@ -1,0 +1,82 @@
+<?php
+
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function aficionados_preprocess_page(array &$variables): void {
+  $manager = \Drupal::languageManager();
+  $ru = $manager->getLanguage('ru');
+  $en = $manager->getLanguage('en');
+  $english = $manager->getCurrentLanguage()->getId() === 'en';
+  $variables['club_english'] = $english;
+  $route = static fn(string $name, $language): Url => Url::fromRoute($name, [], ['language' => $language]);
+  $alias = static fn(string $path, $language): Url => Url::fromUserInput($path, ['language' => $language]);
+
+  $variables['club_about_url'] = $alias('/club', $ru);
+  $variables['club_home_url'] = $english ? $alias('/club', $en) : $route('<front>', $ru);
+  $variables['club_navigation'] = aficionados_menu('club-header', $english);
+  $variables['club_footer'] = aficionados_menu('club-footer', $english);
+  $node = \Drupal::routeMatch()->getParameter('node');
+  $meta = (new CacheableMetadata())->setCacheContexts(['route', 'languages:language_interface', 'user.permissions', 'user.node_grants:view'])->setCacheTags(['node_list', 'path_alias_list']);
+  foreach (['ru' => $ru, 'en' => $en] as $code => $language) {
+    if (!$language) {
+      continue;
+    }
+    $url = $alias('/club', $language);
+    if ($node instanceof NodeInterface && $node->hasTranslation($code)) {
+      $translation = $node->getTranslation($code);
+      $access = $translation->access('view', NULL, TRUE);
+      $meta->addCacheableDependency($translation)->addCacheableDependency($access);
+      if ($translation->isPublished() && $access->isAllowed()) {
+        $url = $translation->toUrl('canonical', ['language' => $language]);
+      }
+    }
+    elseif ($code === 'ru' && !$english) {
+      $url = Url::fromRoute('<current>', [], ['language' => $language]);
+    }
+    $attributes = ['lang' => $code, 'hreflang' => $code];
+    if ($manager->getCurrentLanguage()->getId() === $code) {
+      $attributes['aria-current'] = 'true';
+    }
+    $url->setOption('attributes', $attributes);
+    $variables['club_languages'][$code] = Link::fromTextAndUrl(strtoupper($code), $url)->toRenderable();
+  }
+  $variables['club_languages']['cacheability'] = [];
+  $meta->applyTo($variables['club_languages']['cacheability']);
+}
+
+/**
+ * Builds accessible, editable navigation with RU fallback for archive pages.
+ */
+function aficionados_menu(string $id, bool $english): array {
+  $manager = \Drupal::menuTree();
+  $params = $manager->getCurrentRouteMenuTreeParameters($id)->setMaxDepth(1)->onlyEnabledLinks();
+  $tree = $manager->transform($manager->load($id, $params), [
+    ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+    ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
+  ]);
+  $build = $manager->build($tree);
+  if ($english && !empty($build['#items'])) {
+    $ru = \Drupal::languageManager()->getLanguage('ru');
+    foreach ($build['#items'] as &$item) {
+      $url = $item['url'];
+      if ($url->isRouted() && $url->getRouteName() === 'entity.node.canonical') {
+        $id = $url->getRouteParameters()['node'];
+        $node = $id instanceof NodeInterface ? $id : \Drupal::entityTypeManager()->getStorage('node')->load($id);
+        if ($node && $node->hasTranslation('en') && $node->getTranslation('en')->isPublished()) {
+          continue;
+        }
+      }
+      if (!$url->isExternal()) {
+        $url->setOption('language', $ru);
+      }
+    }
+  }
+  $build['#cache']['tags'][] = 'node_list';
+  return $build;
+}

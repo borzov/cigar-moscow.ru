@@ -1,0 +1,20 @@
+uuid: 7f4be46c-ab43-4730-ba24-2aa46b5f1338
+langcode: ru
+status: true
+dependencies:
+  theme:
+    - aficionados
+_core:
+  default_config_hash: UpT2y8gm0HXTMdSCVlfdNjhpXd3M8n0ZkXO0RnPEP5o
+id: aficionados_title
+theme: aficionados
+region: content
+weight: -20
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  label_display: '0'
+  provider: core
+visibility: {  }

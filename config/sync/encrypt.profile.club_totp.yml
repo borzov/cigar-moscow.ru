@@ -1,0 +1,13 @@
+uuid: 0120ce2a-d740-4b5d-8a59-9ed10c0cede5
+langcode: ru
+status: true
+dependencies:
+  config:
+    - key.key.club_totp
+  module:
+    - real_aes
+id: club_totp
+label: 'Двухфакторный вход'
+encryption_method: real_aes
+encryption_method_configuration: {  }
+encryption_key: club_totp

@@ -1,0 +1,21 @@
+uuid: 66cd00b4-ee68-4de8-8535-8a9262c257ea
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_demo
+    - node.type.cigar
+id: node.cigar.field_demo
+field_name: field_demo
+entity_type: node
+bundle: cigar
+label: 'Демонстрационный материал'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: Вкл
+  off_label: Выкл
+field_type: boolean

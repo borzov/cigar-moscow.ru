@@ -1,0 +1,60 @@
+uuid: e6b1103d-c20c-4500-a5d0-8039cd4d1f2f
+langcode: ru
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.cigar.body
+    - field.field.node.cigar.field_brand_term
+    - field.field.node.cigar.field_country_term
+    - field.field.node.cigar.field_cover
+    - field.field.node.cigar.field_demo
+    - field.field.node.cigar.field_edition
+    - field.field.node.cigar.field_format
+    - field.field.node.cigar.field_legacy_url
+    - field.field.node.cigar.field_source_id
+    - node.type.cigar
+  module:
+    - text
+    - user
+id: node.cigar.teaser
+targetEntityType: node
+bundle: cigar
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
+  field_cover:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_brand_term: true
+  field_country_term: true
+  field_demo: true
+  field_edition: true
+  field_format: true
+  field_legacy_url: true
+  field_source_id: true
+  langcode: true

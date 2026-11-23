@@ -1,0 +1,47 @@
+_core:
+  default_config_hash: 25hWeYa4sasuJtHqKKcEN_nYiuEC1lMPYHsn5dawJEw
+links:
+  -
+    path: /
+    priority: '1.0'
+    changefreq: ''
+  -
+    path: /festival
+    priority: '0.7'
+    changefreq: ''
+  -
+    path: /events
+    priority: '0.7'
+    changefreq: ''
+  -
+    path: /events/world
+    priority: '0.7'
+    changefreq: ''
+  -
+    path: /events/archive
+    priority: '0.7'
+    changefreq: ''
+  -
+    path: /journal
+    priority: '0.7'
+    changefreq: ''
+  -
+    path: /cigars
+    priority: '0.7'
+    changefreq: ''
+  -
+    path: /tastings
+    priority: '0.7'
+    changefreq: ''
+  -
+    path: /rating
+    priority: '0.7'
+    changefreq: ''
+  -
+    path: /gallery
+    priority: '0.7'
+    changefreq: ''
+  -
+    path: /cigars/pairings
+    priority: '0.7'
+    changefreq: ''

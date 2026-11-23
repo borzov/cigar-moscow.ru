@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Run inside the development web container, after composer install.
+set -euo pipefail
+cd /opt/drupal
+test "${CLUB_LOCAL:-}" = 1
+install -d -m 0750 -g www-data private
+exec 9>private/install.lock
+flock 9
+drush=vendor/bin/drush
+if ! "$drush" status --field=bootstrap 2>/dev/null | grep -qi successful; then
+  tables=$(php -r '$db=new PDO("mysql:host=db;dbname=club",getenv("MYSQL_USER"),getenv("MYSQL_PASSWORD")); echo count($db->query("SHOW TABLES")->fetchAll());')
+  if [[ $tables != 0 ]]; then
+    echo "База непуста, а Drupal не загрузился. Установка остановлена для сохранения данных." >&2
+    exit 1
+  fi
+  install -d -o www-data -g www-data web/sites/default/files
+  # Persist the new password before installation, including when recovering a failed run.
+  if [[ ! -e private/local-admin-password ]]; then
+    (umask 077; php -r 'echo bin2hex(random_bytes(30)), PHP_EOL;' > private/local-admin-password)
+  fi
+  # Drush prints credentials on success. Only emit diagnostics from the installer.
+  "$drush" -y site:install --existing-config --account-name=club-admin \
+    --account-pass="$(cat private/local-admin-password)" \
+    > /dev/null 2> >(awk 'tolower($0) !~ /password|парол/ && $0 !~ /\[success\]/ {print > "/dev/stderr"}')
+  chmod 0755 web/sites/default
+  chown -R www-data:www-data web/sites/default/files
+fi
+install -d -o www-data -g www-data -m 0750 private/files
+if [[ $("$drush" state:get club_local_seeded --format=string) != 1 ]]; then
+  # Drupal installation imports locale defaults. Restore the exported site configuration.
+  "$drush" config:import -y
+  "$drush" php:script /opt/drupal/scripts/fixtures.php
+  "$drush" php:script /opt/drupal/web/modules/custom/club_public/scripts/seed-menus.php
+  "$drush" cache:rebuild
+  "$drush" simple-sitemap:rebuild-queue
+  "$drush" simple-sitemap:generate
+  "$drush" state:set club_local_seeded 1
+fi
+"$drush" status --fields=drupal-version,bootstrap,db-driver,uri

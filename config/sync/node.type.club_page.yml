@@ -1,0 +1,11 @@
+uuid: 0a6f1dea-3512-4f1a-ad47-724709545ab6
+langcode: ru
+status: true
+dependencies: {  }
+name: 'Страница клуба'
+type: club_page
+description: null
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

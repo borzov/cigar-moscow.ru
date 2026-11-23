@@ -1,0 +1,23 @@
+#!/bin/sh
+# Start or resume the loopback-only development environment.
+set -eu
+cd "$(dirname "$0")/.."
+if [ ! -e .env ]; then
+  (
+    umask 077
+    set -C
+    db_password=$(openssl rand -hex 32)
+    hash_salt=$(openssl rand -hex 48)
+    tfa_key=$(openssl rand -base64 32)
+    root_password=$(openssl rand -hex 32)
+    {
+      echo "CLUB_DB_PASSWORD=$db_password"
+      echo "CLUB_HASH_SALT=$hash_salt"
+      echo "CLUB_TFA_KEY=$tfa_key"
+      echo "CLUB_DB_ROOT_PASSWORD=$root_password"
+    } > .env
+  )
+fi
+docker compose up -d --build
+docker compose exec -T web composer install --no-interaction --prefer-dist
+docker compose exec -T web bash scripts/install-local

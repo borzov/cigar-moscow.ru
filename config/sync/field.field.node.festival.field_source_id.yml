@@ -1,0 +1,19 @@
+uuid: 7fcfcf95-5359-4fa4-a2fe-eb14550bc3d7
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_source_id
+    - node.type.festival
+id: node.festival.field_source_id
+field_name: field_source_id
+entity_type: node
+bundle: festival
+label: 'Идентификатор источника'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

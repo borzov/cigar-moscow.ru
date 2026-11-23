@@ -1,0 +1,9 @@
+uuid: cf5e7e05-6f13-4c56-8eb8-ac3ba18d202c
+langcode: ru
+status: true
+dependencies: {  }
+name: 'Страны производства'
+vid: club_countries
+description: null
+weight: 0
+new_revision: false

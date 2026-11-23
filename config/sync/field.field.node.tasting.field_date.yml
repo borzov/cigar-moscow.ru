@@ -1,0 +1,21 @@
+uuid: 66410ba7-e5c3-472c-955f-f66f3a1c95e2
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_date
+    - node.type.tasting
+  module:
+    - datetime
+id: node.tasting.field_date
+field_name: field_date
+entity_type: node
+bundle: tasting
+label: Дата
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

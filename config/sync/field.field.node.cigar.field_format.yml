@@ -1,0 +1,19 @@
+uuid: a75bdf2f-310b-4d4b-a7e5-d92460f5f0cd
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_format
+    - node.type.cigar
+id: node.cigar.field_format
+field_name: field_format
+entity_type: node
+bundle: cigar
+label: 'Витола / формат'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

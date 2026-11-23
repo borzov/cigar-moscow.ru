@@ -1,0 +1,21 @@
+uuid: 3c00e110-d833-4cc0-ba51-a756a5535273
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_demo
+    - node.type.album
+id: node.album.field_demo
+field_name: field_demo
+entity_type: node
+bundle: album
+label: 'Демонстрационный материал'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: Вкл
+  off_label: Выкл
+field_type: boolean

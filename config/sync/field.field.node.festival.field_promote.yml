@@ -1,0 +1,21 @@
+uuid: 003d25d3-4999-4289-8052-8319869e096a
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_promote
+    - node.type.festival
+  module:
+    - datetime
+id: node.festival.field_promote
+field_name: field_promote
+entity_type: node
+bundle: festival
+label: 'Начало показа на главной'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

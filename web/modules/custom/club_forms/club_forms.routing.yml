@@ -1,0 +1,33 @@
+club_forms.membership:
+  path: '/membership'
+  defaults:
+    _form: '\Drupal\club_forms\Form\MembershipForm'
+    _title: 'Заявка на вступление'
+  requirements:
+    _permission: 'access content'
+
+club_forms.festival:
+  path: '/festival/{node}/register'
+  defaults:
+    _form: '\Drupal\club_forms\Form\FestivalForm'
+    _title: 'Регистрация на фестиваль'
+  requirements:
+    node: '\d+'
+    _entity_access: 'node.view'
+    _custom_access: '\Drupal\club_forms\RegistrationWindow::access'
+  options:
+    no_cache: TRUE
+    parameters:
+      node:
+        type: entity:node
+
+club_forms.applications:
+  path: '/admin/content/club-applications'
+  defaults:
+    _controller: '\Drupal\club_forms\Controller\ApplicationsController::listing'
+    _title: 'Заявки клуба'
+  requirements:
+    _permission: 'view private club applications'
+  options:
+    _admin_route: TRUE
+    no_cache: TRUE

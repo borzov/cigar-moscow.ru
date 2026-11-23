@@ -1,0 +1,24 @@
+uuid: 8145b0ed-c362-4fd0-b1ec-5d2d1e9d752b
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.club_page
+  module:
+    - text
+id: node.club_page.body
+field_name: body
+entity_type: node
+bundle: club_page
+label: Текст
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+  allowed_formats: {  }
+field_type: text_with_summary

@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ * Storage for private club applications.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function club_forms_schema(): array {
+  return [
+    'club_application' => [
+      'description' => 'Private applications and their consent record.',
+      'fields' => [
+        'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+        'submission_key' => ['type' => 'varchar_ascii', 'length' => 64, 'not null' => FALSE],
+        'kind' => ['type' => 'varchar_ascii', 'length' => 16, 'not null' => TRUE],
+        'festival_nid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+        'applicant_name' => ['type' => 'varchar', 'length' => 120, 'not null' => TRUE],
+        'email' => ['type' => 'varchar', 'length' => 254, 'not null' => TRUE],
+        'consent_version' => ['type' => 'varchar_ascii', 'length' => 32, 'not null' => TRUE],
+        'consented' => ['type' => 'int', 'size' => 'big', 'not null' => TRUE],
+      ],
+      'primary key' => ['id'],
+      'unique keys' => ['submission_key' => ['submission_key']],
+      'indexes' => ['retention' => ['consented']],
+    ],
+  ];
+}
+
+/**
+ * Add per-form replay protection, preserving applications already received.
+ */
+function club_forms_update_11001(): void {
+  \Drupal::database()->schema()->addField('club_application', 'submission_key',
+    ['type' => 'varchar_ascii', 'length' => 64, 'not null' => FALSE],
+    ['unique keys' => ['submission_key' => ['submission_key']]],
+  );
+}

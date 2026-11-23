@@ -1,0 +1,24 @@
+uuid: 41e12460-475e-4b5b-96d6-34d19a93cd03
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_cigars
+    - node.type.cigar
+    - node.type.journal
+id: node.journal.field_cigars
+field_name: field_cigars
+entity_type: node
+bundle: journal
+label: 'Сигары в материале'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      cigar: cigar
+field_type: entity_reference

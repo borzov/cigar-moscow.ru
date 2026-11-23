@@ -1,0 +1,10 @@
+uuid: 6a466330-c4bb-4ae8-80a7-dfe1976008cb
+langcode: ru
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: dhENL0ab-PXTPYXcx4R-UY3YD1bvaQJnLkxx1fe6aEw
+id: club-header
+label: 'Навигация клуба'
+description: ''
+locked: false

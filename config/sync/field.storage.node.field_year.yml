@@ -1,0 +1,20 @@
+uuid: 4497a668-4672-4dd8-8294-ec6d0ef1f24a
+langcode: ru
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_year
+field_name: field_year
+entity_type: node
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

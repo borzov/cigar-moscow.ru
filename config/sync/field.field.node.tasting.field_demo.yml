@@ -1,0 +1,21 @@
+uuid: 585abc0a-9488-4841-a886-90fb21b5f857
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_demo
+    - node.type.tasting
+id: node.tasting.field_demo
+field_name: field_demo
+entity_type: node
+bundle: tasting
+label: 'Демонстрационный материал'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: Вкл
+  off_label: Выкл
+field_type: boolean

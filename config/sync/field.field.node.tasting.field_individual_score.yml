@@ -1,0 +1,23 @@
+uuid: 7aabf8a3-b0b6-4ddb-ac6a-9b4aeb935bb9
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_individual_score
+    - node.type.tasting
+id: node.tasting.field_individual_score
+field_name: field_individual_score
+entity_type: node
+bundle: tasting
+label: 'Индивидуальная оценка из 100'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: 100
+  prefix: ''
+  suffix: ''
+field_type: integer

@@ -1,0 +1,24 @@
+uuid: 329e3b57-cc0e-46d5-9643-682a18d43fc5
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_brand_term
+    - node.type.cigar
+    - taxonomy.vocabulary.club_brands
+id: node.cigar.field_brand_term
+field_name: field_brand_term
+entity_type: node
+bundle: cigar
+label: Марка
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      club_brands: club_brands
+field_type: entity_reference

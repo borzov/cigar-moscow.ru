@@ -1,0 +1,7 @@
+langcode: ru
+status: true
+dependencies: {  }
+id: club-footer
+label: 'Подвал клуба'
+description: ''
+locked: false

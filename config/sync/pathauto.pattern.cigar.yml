@@ -1,0 +1,23 @@
+uuid: 4ef42f3c-8ea4-4a1d-905f-a12acfed6915
+langcode: ru
+status: true
+dependencies:
+  config:
+    - node.type.cigar
+  module:
+    - node
+id: cigar
+label: Сигара
+type: 'canonical_entities:node'
+pattern: '/cigars/[node:title]'
+selection_criteria:
+  212bbfc3-9082-4843-8711-2bb2ed6841fa:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      cigar: cigar
+selection_logic: and
+weight: 0
+relationships: {  }

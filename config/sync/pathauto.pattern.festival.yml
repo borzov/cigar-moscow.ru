@@ -1,0 +1,23 @@
+uuid: 4cc4a604-130c-471b-8dfe-42801046a8af
+langcode: ru
+status: true
+dependencies:
+  config:
+    - node.type.festival
+  module:
+    - node
+id: festival
+label: 'Выпуск фестиваля'
+type: 'canonical_entities:node'
+pattern: '/festivals/[node:title]'
+selection_criteria:
+  f1caeedb-0357-4abc-b422-89e09f58b088:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      festival: festival
+selection_logic: and
+weight: 0
+relationships: {  }

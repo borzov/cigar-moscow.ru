@@ -1,0 +1,22 @@
+uuid: 9f8b0bac-1619-4421-81ec-6644c10e62aa
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_program
+    - node.type.festival
+  module:
+    - text
+id: node.festival.field_program
+field_name: field_program
+entity_type: node
+bundle: festival
+label: Программа
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

@@ -1,0 +1,24 @@
+uuid: a10f4a0e-6ad1-4fc2-bdca-bd2fc5f75463
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_cigar
+    - node.type.cigar
+    - node.type.tasting
+id: node.tasting.field_cigar
+field_name: field_cigar
+entity_type: node
+bundle: tasting
+label: Сигара
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      cigar: cigar
+field_type: entity_reference

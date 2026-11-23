@@ -1,0 +1,24 @@
+uuid: 8dfde8a3-8ff1-436b-8f91-673260880079
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_cover
+    - media.type.image
+    - node.type.journal
+id: node.journal.field_cover
+field_name: field_cover
+entity_type: node
+bundle: journal
+label: Обложка
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+field_type: entity_reference

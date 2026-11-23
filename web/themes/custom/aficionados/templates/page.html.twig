@@ -1,0 +1,38 @@
+{% set club_name = club_english ? 'Moscow Aficionados' : 'Московские Афисионадо' %}
+<header class="club-header">
+  <div class="club-boundary">
+    <a class="club-brand" href="{{ club_home_url }}">{{ club_name }}</a>
+    <nav aria-label="{{ club_english ? 'Main navigation' : 'Основное меню' }}">
+      {{ club_navigation }}
+    </nav>
+    <nav class="club-languages" aria-label="{{ club_english ? 'Language' : 'Язык' }}">
+      {{ club_languages.ru }} {{ club_languages.en }} {{ club_languages.cacheability }}
+    </nav>
+  </div>
+</header>
+<div class="club-boundary">{{ page.highlighted }}{{ page.help }}</div>
+<main id="main-content" class="club-boundary" tabindex="-1">
+  {% if is_front %}<p class="club-intro"><a href="{{ club_about_url }}">Московские Афисионадо</a> · клуб основан в 2010 году</p>{% endif %}
+  {{ page.content }}
+</main>
+<footer class="club-footer">
+  <div class="club-boundary">
+    <p>{{ club_name }} · {{ club_english ? 'Since 2010' : 'С 2010 года' }}</p>
+    <nav aria-label="{{ club_english ? 'Footer' : 'Дополнительное меню' }}">
+      {{ club_footer }}
+    </nav>
+    <p>{{ club_english ? '18+ · For adults only.' : '18+ · Для совершеннолетних.' }}</p>
+  </div>
+</footer>
+<dialog class="club-age" data-club-age aria-labelledby="club-age-title" aria-describedby="club-age-question">
+  <h2 id="club-age-title">{{ club_english ? 'Age confirmation' : 'Подтверждение возраста' }}</h2>
+  <p id="club-age-question">{{ club_english ? 'Are you 18 or older?' : 'Вам уже исполнилось 18 лет?' }}</p>
+  <div data-age-choices>
+    <button type="button" data-age-confirm>{{ club_english ? 'Yes, I am 18 or older' : 'Да, мне есть 18 лет' }}</button>
+    <button type="button" data-age-decline>{{ club_english ? 'I am under 18' : 'Мне нет 18 лет' }}</button>
+  </div>
+  <div data-age-denied hidden>
+    <p>{{ club_english ? 'This site is for adults only.' : 'Сайт доступен только совершеннолетним.' }}</p>
+    <button type="button" data-age-back>{{ club_english ? 'Back' : 'Назад' }}</button>
+  </div>
+</dialog>

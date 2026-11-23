@@ -1,0 +1,11 @@
+uuid: 840ef0c0-519e-4022-95a4-c4437ab80fe0
+langcode: ru
+status: true
+dependencies: {  }
+name: 'Выпуск фестиваля'
+type: festival
+description: null
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

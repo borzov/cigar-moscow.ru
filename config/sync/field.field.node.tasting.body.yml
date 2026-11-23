@@ -1,0 +1,24 @@
+uuid: 1b704d6e-edf9-43d4-8d35-43f5b1b7c1c5
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.tasting
+  module:
+    - text
+id: node.tasting.body
+field_name: body
+entity_type: node
+bundle: tasting
+label: Текст
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+  allowed_formats: {  }
+field_type: text_with_summary

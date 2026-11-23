@@ -1,0 +1,24 @@
+uuid: 0796ad94-47c9-4860-8e7e-9c6758cb88fe
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.journal
+  module:
+    - text
+id: node.journal.body
+field_name: body
+entity_type: node
+bundle: journal
+label: Текст
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+  allowed_formats: {  }
+field_type: text_with_summary
