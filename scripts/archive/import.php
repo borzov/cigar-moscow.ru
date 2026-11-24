@@ -102,8 +102,12 @@ $directory = realpath(getenv('CLUB_ARCHIVE_DIR') ?: dirname(\Drupal::root()) . '
 if (!$directory || !\Drupal::moduleHandler()->moduleExists('club_legacy')) {
   throw new RuntimeException('The offline snapshot and club_legacy must be available.');
 }
-$records = archiveJson(__DIR__ . '/pilot.json');
-$inventory = archiveJson(__DIR__ . '/pilot-inventory.json');
+$planPath = getenv('CLUB_ARCHIVE_PLAN') ?: (__DIR__ . '/pilot.json');
+$inventoryPath = getenv('CLUB_ARCHIVE_INVENTORY') ?: (__DIR__ . '/pilot-inventory.json');
+$acceptMissing = getenv('CLUB_ARCHIVE_ACCEPT_404') === '1';
+$commitEach = getenv('CLUB_ARCHIVE_COMMIT') === 'record';
+$records = archiveJson($planPath);
+$inventory = archiveJson($inventoryPath);
 $articles = [];
 $publicImages = [];
 $targets = [];
@@ -139,9 +143,21 @@ foreach ($records as $row) {
   }
 }
 $missing = archiveJson("$directory/extraction-report.json")['failed_media'];
-$knownMissing = array_merge(...array_values($inventory['missing']));
+$groups = $inventory['missing'] ?? [];
+$knownMissing = $groups ? array_merge(...array_values($groups)) : [];
 foreach ($missing as $url => $reason) {
-  if (!in_array($url, $knownMissing, TRUE) || !preg_match('/\b(404|410)\b/', $reason)) {
+  $reason = (string) $reason;
+  $isGone = (bool) preg_match('/\b(404|410)\b/', $reason);
+  // A later resume must still retry a transport failure. An empty file, a
+  // foreign host or a 404 is a finished answer and must not block the import.
+  $retryable = (bool) preg_match('/\b(429|500|502|503|504)\b|timed out|Connection|Temporary/i', $reason);
+  if ($acceptMissing) {
+    if ($retryable) {
+      throw new RuntimeException("Unresolved download error: $url ($reason)");
+    }
+    continue;
+  }
+  if (!in_array($url, $knownMissing, TRUE) || !$isGone) {
     throw new RuntimeException("Unresolved download error: $url ($reason)");
   }
 }
@@ -150,97 +166,131 @@ $storage = \Drupal::entityTypeManager()->getStorage('node');
 $aliases = \Drupal::service('path_alias.manager');
 $redirects = \Drupal::keyValue(LegacySource::COLLECTION);
 $lock = \Drupal::lock();
-if (!$lock->acquire('club_archive.import', 3600)) {
+if (!$lock->acquire('club_archive.import', 21600)) {
   throw new RuntimeException('A club archive import is already running.');
 }
 $account = \Drupal::service('account_switcher');
 $account->switchTo(User::load(1));
-$transaction = \Drupal::database()->startTransaction();
 $nodes = [];
 $created = 0;
-try {
-  foreach ($records as $row) {
-    $id = $row['id'];
-    $matches = $storage->loadByProperties(['field_source_id' => $id]);
-    $node = reset($matches);
-    if (isset($nodes[$id]) || count($matches) > 1 || ($node && $node->bundle() !== $row['type'])) {
-      throw new RuntimeException("Conflicting archive ID: $id");
+$saveRow = function (array $row) use (&$nodes, &$created, $storage, $aliases, $articles, $files, $targets, $redirects): void {
+  $id = $row['id'];
+  $matches = $storage->loadByProperties(['field_source_id' => $id]);
+  $node = reset($matches);
+  if (isset($nodes[$id]) || count($matches) > 1 || ($node && $node->bundle() !== $row['type'])) {
+    throw new RuntimeException("Conflicting archive ID: $id");
+  }
+  if (!$node) {
+    if ($aliases->getPathByAlias($row['alias'], 'ru') !== $row['alias']) {
+      throw new RuntimeException('Alias already assigned: ' . $row['alias']);
     }
-    if (!$node) {
-      if ($aliases->getPathByAlias($row['alias'], 'ru') !== $row['alias']) {
-        throw new RuntimeException('Alias already assigned: ' . $row['alias']);
-      }
-      $article = $articles[$row['article'] ?? ''] ?? [];
-      $title = $row['title'] ?? $article['title'];
-      $documents = [];
-      $html = archiveBody($row['body'] ?? $article['body'] ?? '', $title, $files, $targets, $documents);
-      $node = Node::create([
-        'type' => $row['type'], 'langcode' => 'ru', 'uid' => 1, 'title' => $title,
-        'body' => ['value' => $html, 'format' => 'basic_html'],
-        'field_source_id' => $id, 'field_legacy_url' => ['uri' => 'https://www.cigar-moscow.ru' . $row['source']],
-        'moderation_state' => ($row['published'] ?? TRUE) ? 'published' : 'draft',
-        'path' => ['alias' => $row['alias'], 'pathauto' => 0], 'promote' => FALSE,
-      ]);
-      if ($date = $row['created'] ?? $article['date'] ?? NULL) {
-        $node->setCreatedTime(archiveTime($date));
-      }
-      foreach ($row['fields'] ?? [] as $name => $value) {
-        $node->set($name, archiveField($value, $name, $nodes));
-      }
-      if ($documents) {
-        $node->set('field_archive_documents', array_values($documents));
-      }
-      if ($coverId = $row['cover_from'] ?? $row['article'] ?? NULL) {
-        $cover = $articles[$coverId];
-        $url = $row['cover_url'] ?? ($cover['preview'] ?: ($cover['images'][0] ?? NULL));
-        if ($url && !$files->isMissing($url)) {
-          $node->set('field_cover', $files->image($url, $cover['title'], 1)->id());
-        }
-      }
-      foreach ($row['images_from'] ?? [] as $articleId) {
-        $gallery = $articles[$articleId];
-        foreach ($gallery['images'] as $i => $url) {
-          if ($files->isMissing($url)) {
-            continue;
-          }
-          $node->field_images->appendItem($files->image($url, $gallery['title'], $i + 1)->id());
-        }
-      }
-      $errors = $node->validate();
-      if (count($errors)) {
-        $messages = [];
-        foreach ($errors as $error) {
-          $messages[] = $error->getPropertyPath() . ': ' . $error->getMessage();
-        }
-        throw new RuntimeException("Validation failed for $id: " . implode(', ', $messages));
-      }
-      $node->save();
-      $created++;
+    $article = $articles[$row['article'] ?? ''] ?? [];
+    $title = $row['title'] ?? $article['title'];
+    $documents = [];
+    $html = archiveBody($row['body'] ?? $article['body'] ?? '', $title, $files, $targets, $documents);
+    $node = Node::create([
+      'type' => $row['type'], 'langcode' => 'ru', 'uid' => 1, 'title' => $title,
+      'body' => ['value' => $html, 'format' => 'basic_html'],
+      'field_source_id' => $id, 'field_legacy_url' => ['uri' => 'https://www.cigar-moscow.ru' . $row['source']],
+      'moderation_state' => ($row['published'] ?? TRUE) ? 'published' : 'draft',
+      'path' => ['alias' => $row['alias'], 'pathauto' => 0], 'promote' => FALSE,
+    ]);
+    if ($date = $row['created'] ?? $article['date'] ?? NULL) {
+      $node->setCreatedTime(archiveTime($date));
     }
-    $nodes[$id] = $node;
-    foreach ($row['redirects'] ?? [] as $source) {
-      $key = LegacySource::key($source);
-      $previous = $redirects->get($key);
-      if ($previous && $previous !== $node->uuid()) {
-        throw new RuntimeException("Conflicting existing redirect: $source");
+    foreach ($row['fields'] ?? [] as $name => $value) {
+      $node->set($name, archiveField($value, $name, $nodes));
+    }
+    if ($documents) {
+      $node->set('field_archive_documents', array_values($documents));
+    }
+    if ($coverId = $row['cover_from'] ?? $row['article'] ?? NULL) {
+      $cover = $articles[$coverId];
+      $url = $row['cover_url'] ?? ($cover['preview'] ?: ($cover['images'][0] ?? NULL));
+      if ($url && !$files->isMissing($url)) {
+        $node->set('field_cover', $files->image($url, $cover['title'], 1)->id());
       }
-      if ($node->isPublished() && !$previous) {
-        $redirects->set($key, $node->uuid());
+    }
+    foreach ($row['images_from'] ?? [] as $articleId) {
+      $gallery = $articles[$articleId];
+      foreach ($gallery['images'] as $i => $url) {
+        if ($files->isMissing($url)) {
+          continue;
+        }
+        $node->field_images->appendItem($files->image($url, $gallery['title'], $i + 1)->id());
       }
+    }
+    $errors = $node->validate();
+    if (count($errors)) {
+      $messages = [];
+      foreach ($errors as $error) {
+        $messages[] = $error->getPropertyPath() . ': ' . $error->getMessage();
+      }
+      throw new RuntimeException("Validation failed for $id: " . implode(', ', $messages));
+    }
+    $node->save();
+    $created++;
+  }
+  $nodes[$id] = $node;
+  foreach ($row['redirects'] ?? [] as $source) {
+    $key = LegacySource::key($source);
+    $previous = $redirects->get($key);
+    if ($previous && $previous !== $node->uuid()) {
+      throw new RuntimeException("Conflicting existing redirect: $source");
+    }
+    if ($node->isPublished() && !$previous) {
+      $redirects->set($key, $node->uuid());
     }
   }
+};
+$preserveThumbnails = function () use ($articles, $files): void {
   // Preserve an original thumbnail even when the editor chose another cover.
   foreach ($articles as $article) {
-    if ($article['preview'] && !$files->isMissing($article['preview'])) {
+    if (!empty($article['preview']) && !$files->isMissing($article['preview'])) {
       $files->image($article['preview'], $article['title'], 1);
     }
   }
-  unset($transaction);
-}
-catch (Throwable $error) {
-  $transaction->rollBack();
-  $files->rollbackFiles();
-  throw $error;
+};
+try {
+  if ($commitEach) {
+    $problems = [];
+    foreach ($records as $index => $row) {
+      $transaction = \Drupal::database()->startTransaction();
+      $mark = $files->writtenCount();
+      try {
+        $saveRow($row);
+        unset($transaction);
+      }
+      catch (Throwable $error) {
+        $transaction->rollBack();
+        $files->rollbackFrom($mark);
+        $problems[] = $row['id'] . ': ' . $error->getMessage();
+      }
+      if ((($index + 1) % 25) === 0) {
+        fwrite(STDERR, 'Imported ' . ($index + 1) . '/' . count($records) . "\n");
+      }
+    }
+    $preserveThumbnails();
+    if ($problems) {
+      fwrite(STDERR, implode("\n", $problems) . "\n");
+      throw new RuntimeException(count($problems) . ' archive records failed');
+    }
+  }
+  else {
+    $transaction = \Drupal::database()->startTransaction();
+    try {
+      foreach ($records as $row) {
+        $saveRow($row);
+      }
+      $preserveThumbnails();
+      unset($transaction);
+    }
+    catch (Throwable $error) {
+      $transaction->rollBack();
+      $files->rollbackFiles();
+      throw $error;
+    }
+  }
 }
 finally {
   $account->switchBack();

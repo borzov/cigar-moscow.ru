@@ -117,11 +117,20 @@ final class ArchiveFiles {
     return [$file, $size];
   }
 
-  public function rollbackFiles(): void {
-    foreach ($this->written as $uri) {
+  public function writtenCount(): int {
+    return count($this->written);
+  }
+
+  public function rollbackFrom(int $index): void {
+    foreach (array_slice($this->written, $index) as $uri) {
       if (is_file($uri)) {
         \Drupal::service('file_system')->delete($uri);
       }
     }
+    $this->written = array_slice($this->written, 0, $index);
+  }
+
+  public function rollbackFiles(): void {
+    $this->rollbackFrom(0);
   }
 }

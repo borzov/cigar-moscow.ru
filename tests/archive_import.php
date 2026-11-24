@@ -16,7 +16,7 @@ function archiveRead(string $path): array {
 
 $root = dirname(\Drupal::root());
 $dir = getenv('CLUB_ARCHIVE_DIR') ?: "$root/private/archive-pilot";
-$manifest = archiveRead("$root/scripts/archive/pilot.json");
+$manifest = archiveRead(getenv('CLUB_ARCHIVE_PLAN') ?: "$root/scripts/archive/pilot.json");
 $storage = \Drupal::entityTypeManager()->getStorage('node');
 $images = [];
 $mediaMap = \Drupal::keyValue('club_archive.media');
