@@ -61,7 +61,13 @@ foreach ($manifest as $row) {
   }
   if (isset($row['article'])) {
     $article = $articles[$row['article']] ??= archiveRead("$dir/articles/{$row['article']}.json");
-    archiveCheck((new DateTimeImmutable('@' . $node->getCreatedTime()))->setTimezone(new DateTimeZone('Europe/Moscow'))->format('Y-m-d') === $article['date'], "Wrong publication date: $id");
+    if ($article['date'] !== '') {
+      archiveCheck((new DateTimeImmutable('@' . $node->getCreatedTime()))->setTimezone(new DateTimeZone('Europe/Moscow'))->format('Y-m-d') === $article['date'], "Wrong publication date: $id");
+    }
+    else {
+      // No source day. Timestamp 0 would be replaced on save, so 1 is the kept value.
+      archiveCheck((int) $node->getCreatedTime() === 1, "Undated material sorts as new: $id");
+    }
     $expected = Html::load($article['body']);
     foreach (iterator_to_array($expected->getElementsByTagName('img')) as $img) {
       if (isset($missing[$img->getAttribute('src')])) {

@@ -23,3 +23,6 @@ __pycache__/
 !/web/sites/default/settings.php
 /.editorconfig
 /.gitattributes
+/archive-missing-for-admin.txt
+/archive-missing-urls.txt
+/archive-wayback-found.txt

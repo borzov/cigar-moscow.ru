@@ -21,7 +21,7 @@ settings:
   handler: 'default:file'
   handler_settings: {  }
   file_directory: legacy-documents
-  file_extensions: pdf
+  file_extensions: 'pdf doc docx ppt pptx txt mov'
   max_filesize: ''
   description_field: true
 field_type: file

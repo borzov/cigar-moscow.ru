@@ -20,6 +20,10 @@ from bs4 import BeautifulSoup, Comment
 BASE = "https://www.cigar-moscow.ru/"
 SECTIONS = {"anons": (879, 883), "cigar_news": (886, 887, 888), "tasting": (111, 123, 146, 102, 298)}
 IMAGE = re.compile(r"\.(?:jpe?g|gif|png|webp)$", re.I)
+CHROME = re.compile(
+    r"/content/Image/(?:maf\d+|bestclub\d*|habano(?:14|15|16|18|19)?|habanos17|banner\d+(?:-\d+)?|5years|birthday\d+)\.(?:gif|jpe?g|png)$",
+    re.I,
+)
 ALLOWED = set("a p div span h1 h2 h3 h4 h5 h6 br hr strong em b i u s sup sub blockquote ol ul li table thead tbody tfoot tr th td caption img".split())
 BLOCKS = set("p div h1 h2 h3 h4 h5 h6 br hr blockquote ol ul li table thead tbody tfoot tr th td caption".split())
 
@@ -133,11 +137,6 @@ def extract(doc, url, item, *, allow_empty=False, strict_template=True):
     preview_url = absolute(url, preview["src"]) if preview else None
     if not body or (strict_template and (generated_title or not body.select(".category"))):
         raise ValueError(f"Unexpected article template for {item}")
-    for node in body.select(".category, script, style, iframe, form, object, embed, noscript"):
-        node.decompose()
-    for node in body.find_all(string=lambda s: isinstance(s, Comment)):
-        node.extract()
-
     warnings = []
     if generated_title:
         warnings.append("У страницы нет заголовка. Поставлено служебное название.")
@@ -153,51 +152,7 @@ def extract(doc, url, item, *, allow_empty=False, strict_template=True):
         sensitive[0].clear()
         sensitive[0].string = "[Архивные платёжные и контактные данные удалены.]"
         warnings.append("One historical payment/contact paragraph redacted.")
-    images_in_source = len(body.find_all("img"))
-    hidden_gallery_labels = 0
-    gallery_targets = []
-    attachments = []
-    for link in list(body.find_all("a", href=True)):
-        target = absolute(url, link["href"])
-        path = urlsplit(target).path
-        if IMAGE.search(path) and local_source(target) and link.get("rel"):
-            # The legacy lightbox hides most of its image links with inline CSS.
-            # Make those images available in document order without its JavaScript.
-            hidden = link.find_parent(style=lambda s: s and re.search(r"display\s*:\s*none", s, re.I))
-            if hidden:
-                link.clear()
-                hidden_gallery_labels += 1
-            image = doc.new_tag("img", src=target, alt="")
-            link.append(image)
-            gallery_targets.append(target)
-            link.unwrap()
-        elif target.startswith(("http://", "https://")):
-            link["href"] = target
-            if path.lower().endswith(".pdf"):
-                attachments.append(target)
-        else:
-            link.unwrap()
-
-    for img in body.find_all("img"):
-        img["src"] = absolute(url, img["src"])
-    # Compare article text, semantic blocks and image positions before and after
-    # removing layout attributes. Only explicit transformations above may differ.
-    expected = structure(body)
-    for tag in list(body.find_all(True)):
-        if tag.name not in ALLOWED:
-            tag.unwrap()
-            continue
-        keep = {"img": ("src", "alt"), "a": ("href",), "td": ("colspan", "rowspan"), "th": ("colspan", "rowspan", "scope"), "ol": ("start",)}.get(tag.name, ())
-        tag.attrs = {key: tag[key] for key in keep if tag.has_attr(key)}
-        if tag.name == "img":
-            tag.attrs.setdefault("alt", "")
-    clean = body.decode_contents().strip()
-    output = BeautifulSoup('<div id="body">' + clean + "</div>", "html5lib").select_one("#body")
-    if not same_reading(expected, structure(output)):
-        raise ValueError(f"Body text or image positions changed for {item}")
-    images = [img["src"] for img in output.select("img")]
-    if len(images) != images_in_source + len(gallery_targets):
-        raise ValueError(f"Unexpected number of images for {item}")
+    clean, images, attachments, gallery_targets, hidden_gallery_labels, expected, output, images_in_source = _clean_body(body, doc, url, item)
     if not expected[0] and not (allow_empty and images):
         raise ValueError(f"Missing body text for {item}")
     record = {"title": title, "date": timestamp, "url": url, "body": clean, "images": images, "preview": preview_url}
@@ -215,6 +170,131 @@ def extract(doc, url, item, *, allow_empty=False, strict_template=True):
     return record, image_alts, attachments, metrics
 
 
+def extract_document(doc, url, item):
+    """Read a named CMS page that is not wrapped in the news template."""
+    cell = doc.select_one(".mainItemCell")
+    if cell is None:
+        raise ValueError(f"Unexpected document template for {item}")
+    heading = cell.select_one("h1")
+    title = heading.get_text(" ", strip=True) if heading else ""
+    for node in cell.select(".pageMainHeader, .toTop, script, style"):
+        node.decompose()
+    _drop_chrome(cell, url)
+    warnings = []
+    if not title:
+        title = f"Материал {item}"
+        warnings.append("У страницы нет заголовка. Поставлено служебное название.")
+    clean, images, attachments, _gallery, _hidden, expected, _output, _sources = _clean_body(cell, doc, url, item)
+    if not expected[0] and not images:
+        raise ValueError(f"Missing body text for {item}")
+    record = {"title": title, "date": "", "url": url, "body": clean, "images": images, "preview": None}
+    if warnings:
+        record["warnings"] = warnings
+    return record, {}, attachments, {}
+
+
+def _drop_chrome(body, url):
+    for img in list(body.find_all("img")):
+        src = absolute(url, img.get("src") or "")
+        if not CHROME.search(urlsplit(src).path) and "mc.yandex.ru" not in src:
+            continue
+        parent = img.parent
+        img.decompose()
+        if getattr(parent, "name", None) == "a" and not parent.get_text(strip=True):
+            parent.decompose()
+
+
+def _clean_body(body, doc, url, item):
+    for node in body.select(".category, script, style, iframe, form, object, embed, noscript"):
+        node.decompose()
+    for node in body.find_all(string=lambda value: isinstance(value, Comment)):
+        node.extract()
+    images_in_source = len(body.find_all("img"))
+    hidden_gallery_labels = 0
+    gallery_targets = []
+    attachments = []
+    for link in list(body.find_all("a", href=True)):
+        target = absolute(url, link["href"])
+        path = urlsplit(target).path
+        if IMAGE.search(path) and local_source(target) and link.get("rel"):
+            # The legacy lightbox hides most of its image links with inline CSS.
+            # Make those images available in document order without its JavaScript.
+            hidden = link.find_parent(style=lambda style: style and re.search(r"display\s*:\s*none", style, re.I))
+            if hidden:
+                link.clear()
+                hidden_gallery_labels += 1
+            image = doc.new_tag("img", src=target, alt="")
+            link.append(image)
+            gallery_targets.append(target)
+            link.unwrap()
+        elif target.startswith(("http://", "https://")):
+            link["href"] = target
+            if path.lower().endswith((".pdf", ".doc", ".docx", ".ppt", ".pptx", ".txt", ".mov")):
+                attachments.append(target)
+        else:
+            link.unwrap()
+    for img in body.find_all("img"):
+        img["src"] = absolute(url, img["src"])
+    expected = structure(body)
+    for tag in list(body.find_all(True)):
+        if tag.name not in ALLOWED:
+            tag.unwrap()
+            continue
+        keep = {"img": ("src", "alt"), "a": ("href",), "td": ("colspan", "rowspan"), "th": ("colspan", "rowspan", "scope"), "ol": ("start",)}.get(tag.name, ())
+        tag.attrs = {key: tag[key] for key in keep if tag.has_attr(key)}
+        if tag.name == "img":
+            tag.attrs.setdefault("alt", "")
+    clean = body.decode_contents().strip()
+    output = BeautifulSoup('<div id="body">' + clean + "</div>", "html5lib").select_one("#body")
+    if not same_reading(expected, structure(output)):
+        raise ValueError(f"Body text or image positions changed for {item}")
+    images = [img["src"] for img in output.select("img")]
+    if len(images) != images_in_source + len(gallery_targets):
+        raise ValueError(f"Unexpected number of images for {item}")
+    return clean, images, attachments, gallery_targets, hidden_gallery_labels, expected, output, images_in_source
+
+
+def sniff(raw, suffix):
+    """Return a mime type for a file we are willing to keep, or None."""
+    if raw.startswith(b"\xff\xd8\xff"):
+        return "image/jpeg"
+    if raw.startswith(b"\x89PNG\r\n\x1a\n"):
+        return "image/png"
+    if raw.startswith((b"GIF87a", b"GIF89a")):
+        return "image/gif"
+    if raw.startswith(b"RIFF") and raw[8:12] == b"WEBP":
+        return "image/webp"
+    if suffix == ".pdf" and raw.startswith(b"%PDF-"):
+        return "application/pdf"
+    if suffix == ".txt" and raw and b"\x00" not in raw[:4096]:
+        return "text/plain"
+    if suffix in {".docx", ".pptx"} and raw.startswith(b"PK\x03\x04"):
+        kinds = {
+            ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            ".pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        }
+        return kinds[suffix]
+    if suffix in {".doc", ".ppt"} and raw.startswith(b"\xd0\xcf\x11\xe0"):
+        return "application/msword" if suffix == ".doc" else "application/vnd.ms-powerpoint"
+    if suffix == ".mov" and any(token in raw[:64] for token in (b"ftyp", b"moov", b"mdat")):
+        return "video/quicktime"
+    return None
+
+
+def store_bytes(root, folder, url, raw, alt=""):
+    """Keep bytes already read from disk under the same address hash as a download."""
+    suffix = Path(unquote(urlsplit(url).path)).suffix.lower()
+    mime = sniff(raw, suffix)
+    rel = Path(folder) / (sha256(url.encode()).hexdigest() + suffix)
+    if not mime or (folder == "assets") != mime.startswith("image/"):
+        raise ValueError(f"Unexpected content signature ({len(raw)} bytes)")
+    write(root / rel, raw)
+    data = {"file": rel.as_posix(), "sha256": sha256(raw).hexdigest(), "bytes": len(raw), "mime": mime}
+    if alt:
+        data["alt"] = alt
+    return data
+
+
 def download_asset(task):
     root, folder, url, alt = task
     # Preserve ext and use the full URL's hash, since many galleries reuse names.
@@ -222,13 +302,7 @@ def download_asset(task):
     rel = Path(folder) / (sha256(url.encode()).hexdigest() + suffix)
     try:
         raw = fetch(url, root / rel)
-        mime = None
-        for prefix, kind in [(b"\xff\xd8\xff", "image/jpeg"), (b"\x89PNG\r\n\x1a\n", "image/png"), (b"GIF87a", "image/gif"), (b"GIF89a", "image/gif"), (b"%PDF-", "application/pdf")]:
-            if raw.startswith(prefix):
-                mime = kind
-                break
-        if raw.startswith(b"RIFF") and raw[8:12] == b"WEBP":
-            mime = "image/webp"
+        mime = sniff(raw, suffix)
         if not mime or (folder == "assets") != mime.startswith("image/"):
             (root / rel).unlink()
             raise ValueError(f"Unexpected content signature ({len(raw)} bytes)")

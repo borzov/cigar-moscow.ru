@@ -161,6 +161,77 @@ def test_already_redacted_text_still_asks_the_editor():
     assert "телефон" in question["question"]
 
 
+def test_spirit_essay_and_named_report_keep_their_own_addresses():
+    spirit = {
+        "item_id": 194,
+        "section": "spirit",
+        "title": "Чьи шишки в лесу.",
+        "date": "2011-01-31",
+        "urls": ["/cigar_news.html?item_id=194"],
+        "categories": [],
+        "scripts": ["cigar_news"],
+    }
+    registry = registry_for([spirit])
+    registry["documents"] = {
+        "page-del-habano-1": {
+            "item_id": "page-del-habano-1",
+            "section": "cigar_news",
+            "title": "День первый",
+            "date": "2010-02-19",
+            "urls": ["/del_habano_1.html"],
+            "categories": [],
+            "source": "/del_habano_1.html",
+        }
+    }
+    registry["pages"]["/del_habano_1.html"] = {"kind": "document", "item_id": "page-del-habano-1"}
+    images = [f"https://www.cigar-moscow.ru/content/Image/habano/{index}.jpg" for index in range(8)]
+    articles = {
+        "194": article(194, "Чьи шишки в лесу.", "<p>Текст очерка.</p>", "2011-01-31"),
+        "page-del-habano-1": {
+            "title": "День первый",
+            "date": "2010-02-19",
+            "url": "https://www.cigar-moscow.ru/del_habano_1.html",
+            "body": "<p>До фестиваля осталось три дня.</p>",
+            "images": images,
+            "preview": None,
+        },
+    }
+    plan = build_plan(registry, articles, [], [], {}, {})
+    essay = next(row for row in plan["records"] if row["id"] == "legacy:journal:194")
+    assert essay["fields"]["field_rubrics"] == [{"slug": "club"}]
+    assert essay["redirects"] == ["/cigar_news.html?item_id=194"]
+    report = next(row for row in plan["records"] if row["id"] == "legacy:journal:page-del-habano-1")
+    assert report["alias"] == "/journal/page-del-habano-1"
+    assert report["article"] == "page-del-habano-1"
+    assert report["redirects"] == ["/del_habano_1.html"]
+    assert report["source"] == "/del_habano_1.html"
+    album = next(row for row in plan["records"] if row["id"] == "legacy:album:page-del-habano-1")
+    assert album["images_from"] == ["page-del-habano-1"]
+    assert plan["outcomes"]["pages"]["/del_habano_1.html"]["result"] == "records"
+    loose = {
+        "item_id": "file-report-2017",
+        "section": "cigar_news",
+        "title": "Отчёт",
+        "date": "2017-06-13",
+        "urls": [],
+        "source": "/content/Image/news/2017-06-13/report.docx",
+        "categories": [],
+    }
+    registry["documents"]["file-report-2017"] = loose
+    articles["file-report-2017"] = {
+        "title": "Отчёт",
+        "date": "2017-06-13",
+        "url": "https://www.cigar-moscow.ru/content/Image/news/2017-06-13/report.docx",
+        "body": '<p><a href="https://www.cigar-moscow.ru/content/Image/news/2017-06-13/report.docx">report.docx</a></p>',
+        "images": [],
+        "preview": None,
+    }
+    plan = build_plan(registry, articles, [], [], {}, {})
+    attachment = next(row for row in plan["records"] if row["id"] == "legacy:journal:file-report-2017")
+    assert "redirects" not in attachment
+    assert attachment["source"] == "/content/Image/news/2017-06-13/report.docx"
+
+
 def test_price_becomes_a_draft_without_a_redirect():
     item = {
         "item_id": 77,
@@ -188,5 +259,6 @@ if __name__ == "__main__":
     test_plan_preserves_pilot_and_describes_every_new_page()
     test_rating_on_a_news_page_still_has_an_event()
     test_already_redacted_text_still_asks_the_editor()
+    test_spirit_essay_and_named_report_keep_their_own_addresses()
     test_price_becomes_a_draft_without_a_redirect()
     print("planner passed")

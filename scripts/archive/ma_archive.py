@@ -12,6 +12,7 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from snapshot import Limiter, fetch_articles, inventory, preview, read_json  # noqa: E402
+from supplement import supplement  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_DEST = Path.home() / ".local/share/cigar-moscow" / "archive"
@@ -19,7 +20,7 @@ DEFAULT_DEST = Path.home() / ".local/share/cigar-moscow" / "archive"
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("inventory", "fetch", "preview", "import", "resume", "verify"))
+    parser.add_argument("command", choices=("inventory", "fetch", "preview", "import", "resume", "verify", "supplement"))
     parser.add_argument("--dest", type=Path, default=DEFAULT_DEST)
     parser.add_argument("--limit", type=int, default=0, help="Import or fetch only the first N materials. 0 means all.")
     parser.add_argument("--compose-project", default=os.environ.get("COMPOSE_PROJECT_NAME", ""))
@@ -33,6 +34,8 @@ def main():
         fetch_articles(args.dest, limiter, args.limit)
     elif args.command == "preview":
         preview(args.dest)
+    elif args.command == "supplement":
+        supplement(args.dest, limiter)
     elif args.command == "import":
         import_archive(args.dest, args.compose_project)
     elif args.command == "resume":
@@ -58,7 +61,7 @@ def compose(project, *command):
 def import_archive(root, project):
     names = [
         "articles", "assets", "attachments", "assets.json", "attachments.json",
-        "extraction-report.json", "inventory.json", "plan",
+        "extraction-report.json", "inventory.json", "plan", "recovered.json",
     ]
     present = [name for name in names if (root / name).exists()]
     compose(project, "exec", "-T", "web", "install", "-d", "-m", "0700", "/opt/drupal/private/archive")
@@ -83,6 +86,7 @@ def import_archive(root, project):
         "-e", "CLUB_ARCHIVE_INVENTORY=/opt/drupal/private/archive/inventory.json",
         "-e", "CLUB_ARCHIVE_ACCEPT_404=1",
         "-e", "CLUB_ARCHIVE_COMMIT=record",
+        "-e", "CLUB_ARCHIVE_RECOVERED=/opt/drupal/private/archive/recovered.json",
         "web", "php", "-d", "memory_limit=2048M",
         "vendor/drush/drush/drush.php", "php:script", "/opt/drupal/scripts/archive/import.php",
     )

@@ -62,13 +62,27 @@ final class ArchiveFiles {
     return isset($this->missing[$url]);
   }
 
+  public function missingUrls(): array {
+    return array_keys($this->missing);
+  }
+
+  public function hasAsset(string $url): bool {
+    return isset($this->assets[$url]);
+  }
+
+  public function attachmentUrls(): array {
+    return array_keys($this->attachments);
+  }
+
   public function isAttachment(string $url): bool {
     return isset($this->attachments[$url]);
   }
 
   public function document(string $url): File {
     if (!isset($this->documents[$url])) {
-      [$this->documents[$url]] = $this->file($this->attachments[$url], FALSE, TRUE);
+      $asset = $this->attachments[$url];
+      $pdf = ($asset['mime'] ?? '') === 'application/pdf';
+      [$this->documents[$url]] = $this->file($asset, FALSE, $pdf);
     }
     return $this->documents[$url];
   }
@@ -79,16 +93,33 @@ final class ArchiveFiles {
       hash_file('sha256', $input) !== $asset['sha256']) {
       throw new RuntimeException('Snapshot integrity error: ' . $asset['file']);
     }
-    $size = $pdf ? [] : getimagesize($input);
-    $type = $pdf ? 'application/pdf' : ($size['mime'] ?? '');
+    $mime = $asset['mime'] ?? '';
+    if ($pdf || $mime === 'application/pdf') {
+      $size = [];
+      $type = 'application/pdf';
+      if (file_get_contents($input, FALSE, NULL, 0, 5) !== '%PDF-') {
+        throw new RuntimeException('Invalid PDF: ' . $asset['file']);
+      }
+    }
+    elseif (str_starts_with($mime, 'image/') || $public) {
+      $size = getimagesize($input);
+      $type = $size['mime'] ?? '';
+    }
+    else {
+      $size = [];
+      $type = $mime;
+      $this->assertDocument($input, $type, $asset['file']);
+    }
     $extension = match ($type) {
       'image/jpeg' => 'jpg', 'image/png' => 'png', 'image/gif' => 'gif',
       'image/webp' => 'webp', 'application/pdf' => 'pdf',
+      'application/msword' => 'doc',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'docx',
+      'application/vnd.ms-powerpoint' => 'ppt',
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'pptx',
+      'text/plain' => 'txt', 'video/quicktime' => 'mov',
       default => throw new RuntimeException('Unsupported file type: ' . $asset['file']),
     };
-    if ($pdf && file_get_contents($input, FALSE, NULL, 0, 5) !== '%PDF-') {
-      throw new RuntimeException('Invalid PDF: ' . $asset['file']);
-    }
     $hash = $asset['sha256'];
     $directory = ($public ? 'public://' : 'private://') . 'legacy/' . substr($hash, 0, 2);
     $uri = "$directory/$hash.$extension";
@@ -115,6 +146,21 @@ final class ArchiveFiles {
       $file->save();
     }
     return [$file, $size];
+  }
+
+  private function assertDocument(string $input, string $type, string $name): void {
+    $head = file_get_contents($input, FALSE, NULL, 0, 64);
+    $ok = match ($type) {
+      'application/msword', 'application/vnd.ms-powerpoint' => str_starts_with($head, "\xD0\xCF\x11\xE0"),
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation' => str_starts_with($head, "PK\x03\x04"),
+      'text/plain' => $head !== FALSE && !str_contains(substr($head, 0, 4096), "\0"),
+      'video/quicktime' => str_contains($head, 'ftyp') || str_contains($head, 'moov') || str_contains($head, 'mdat'),
+      default => FALSE,
+    };
+    if (!$ok) {
+      throw new RuntimeException('Invalid document: ' . $name);
+    }
   }
 
   public function writtenCount(): int {

@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup
 PILOT_ARTICLES = {102, 111, 123, 146, 298, 879, 883, 886, 887, 888}
 RUBRIC = {
     "cigar_news": "club", "anons": "club", "tasting": "club", "gallery": "club", "news": "club",
+    "spirit": "club",
     "journey": "travel", "cigar_portrait": "portrait", "cigar_raritet": "vintage",
     "humidor": "humidor", "okurok": "digest",
 }
@@ -263,6 +264,19 @@ def build_plan(registry, articles, rating_rows, pilot_records, omitted, media):
                 "question": note,
             })
         made[item_id] = _plan_item(item, article, new, questions, festivals, used_slugs)
+    for key in sorted(registry.get("documents") or {}):
+        item = registry["documents"][key]
+        token = str(item["item_id"])
+        article = articles.get(token)
+        if not article:
+            made[token] = {"result": "skip", "reason": "Страница есть в списке, но текст не скачан.", "records": []}
+            questions.append({
+                "id": f"missing-article-{token}",
+                "subject": f"item:{token}",
+                "question": f"Материал {token} не удалось прочитать. Повторить загрузку или взять его из резервной копии?",
+            })
+            continue
+        made[token] = _plan_item(item, article, new, questions, festivals, used_slugs)
     _plan_ratings(rating_rows, registry, articles, new, questions, made, used_slugs)
     _festival_records(registry, articles, festivals, new, questions, records)
     records.extend(new["festival"])
@@ -305,22 +319,43 @@ def _pilot_outcome(item_id, record_ids, records):
     return {"result": "records", "records": list(record_ids), "aliases": aliases, "preserved": True}
 
 
+def _record_identity(item):
+    """Numeric news ids keep archive-N addresses. Named pages keep their own token."""
+    raw = item["item_id"]
+    numeric = isinstance(raw, int) or (isinstance(raw, str) and str(raw).isdigit())
+    token = str(int(raw)) if numeric else str(raw)
+    prefix = f"/journal/archive-{token}" if numeric else f"/journal/{token}"
+    event = f"/events/archive-{token}" if numeric else f"/events/{token}"
+    album = f"/albums/archive-{token}" if numeric else f"/albums/{token}"
+    return {
+        "token": token,
+        "article": int(token) if numeric else token,
+        "journal": f"legacy:journal:{token}",
+        "event": f"legacy:event:{token}",
+        "album": f"legacy:album:{token}",
+        "journal_alias": prefix,
+        "event_alias": event,
+        "album_alias": album,
+    }
+
+
 def _plan_item(item, article, new, questions, festivals, used_slugs):
-    item_id = int(item["item_id"])
+    identity = _record_identity(item)
+    token = identity["token"]
     original = article.get("body") or ""
     body, redacted = redact_sensitive(original)
     commercial = bool(COMMERCIAL.search(plain(original)))
     published = not commercial
     if redacted or "[данные удалены]" in original:
         questions.append({
-            "id": f"redacted-{item_id}",
-            "subject": f"legacy:journal:{item_id}",
+            "id": f"redacted-{token}",
+            "subject": identity["journal"],
             "question": "Из текста удалён фрагмент с телефоном, почтой или номером карты. Проверьте, что соседние фразы на месте.",
         })
     if commercial:
         questions.append({
-            "id": f"commercial-{item_id}",
-            "subject": f"legacy:journal:{item_id}",
+            "id": f"commercial-{token}",
+            "subject": identity["journal"],
             "question": "В тексте есть цена или пакет участия. Материал оставлен черновиком для редакционной проверки.",
         })
     published_on = article.get("date") or item.get("date") or ""
@@ -328,16 +363,17 @@ def _plan_item(item, article, new, questions, festivals, used_slugs):
     category = _festival_category(item, festivals)
     festival_id = festivals.get(category) if category else None
     section = item.get("section") or "cigar_news"
+    source = item.get("source") or _canonical(item)
     wants_event = section in {"tasting", "gallery"} or festival_id or len(article.get("images") or []) >= 8
     event_id = None
     if wants_event and event_date:
-        event_id = f"legacy:event:{item_id}"
+        event_id = identity["event"]
         new["event"].append({
             "id": event_id,
             "type": "event",
-            "alias": f"/events/archive-{item_id}",
-            "source": _canonical(item),
-            "title": article.get("title") or item.get("title") or f"Встреча {item_id}",
+            "alias": identity["event_alias"],
+            "source": source,
+            "title": article.get("title") or item.get("title") or f"Встреча {token}",
             "body": "<p>Дата взята из текста или из даты публикации архива и требует подтверждения, если в материале нет отдельной даты встречи.</p>",
             "created": published_on or event_date,
             "published": published,
@@ -350,13 +386,13 @@ def _plan_item(item, article, new, questions, festivals, used_slugs):
     album_id = None
     images = article.get("images") or []
     if event_id and (section == "gallery" or festival_id or len(images) >= 8) and images:
-        album_id = f"legacy:album:{item_id}"
+        album_id = identity["album"]
         new["album"].append({
             "id": album_id,
             "type": "album",
-            "alias": f"/albums/archive-{item_id}",
-            "source": _canonical(item),
-            "title": (article.get("title") or item.get("title") or str(item_id)) + " · фотографии",
+            "alias": identity["album_alias"],
+            "source": source,
+            "title": (article.get("title") or item.get("title") or token) + " · фотографии",
             "body": "<p>Порядок кадров сохранён из архивной страницы.</p>",
             "published": published,
             "fields": {
@@ -364,10 +400,10 @@ def _plan_item(item, article, new, questions, festivals, used_slugs):
                 "field_event": {"ref": event_id},
                 **({"field_festival": {"ref": festival_id}} if festival_id else {}),
             },
-            "images_from": [item_id],
-            "cover_from": item_id,
+            "images_from": [identity["article"]],
+            "cover_from": identity["article"],
         })
-    journal_id = f"legacy:journal:{item_id}"
+    journal_id = identity["journal"]
     fields = {"field_rubrics": [{"slug": RUBRIC.get(section, "club")}]}
     if event_id:
         fields["field_event"] = {"ref": event_id}
@@ -376,22 +412,20 @@ def _plan_item(item, article, new, questions, festivals, used_slugs):
     journal = {
         "id": journal_id,
         "type": "journal",
-        "alias": f"/journal/archive-{item_id}",
-        "source": _canonical(item),
-        "article": item_id,
+        "alias": identity["journal_alias"],
+        "source": source,
+        "article": identity["article"],
         "published": published,
         "created": published_on or None,
         "fields": fields,
-        "cover_from": item_id,
+        "cover_from": identity["article"],
     }
-    if published:
-        journal["redirects"] = list(item.get("urls") or [])
-    else:
-        journal.pop("redirects", None)
+    if published and item.get("urls"):
+        journal["redirects"] = list(item["urls"])
     new["journal"].append({key: value for key, value in journal.items() if value not in (None, "", [], {})})
     record_ids = [journal_id, *([event_id] if event_id else []), *([album_id] if album_id else [])]
     if published:
-        return {"result": "records", "records": record_ids, "aliases": [f"/journal/archive-{item_id}"]}
+        return {"result": "records", "records": record_ids, "aliases": [identity["journal_alias"]]}
     return {
         "result": "draft",
         "reason": "Цена, пакет участия или рекламная подача. Публичные перенаправления не назначены.",
@@ -583,6 +617,9 @@ def _page_outcomes(registry, festivals, made, records):
         if kind == "article":
             outcome = made.get(int(info["item_id"]), {"result": "skip", "reason": "Нет решения по материалу.", "records": []})
             pages[url] = outcome
+            continue
+        if kind == "document":
+            pages[url] = made.get(str(info.get("item_id")), {"result": "skip", "reason": "Нет решения по материалу.", "records": []})
             continue
         if kind == "duplicate":
             pages[url] = {

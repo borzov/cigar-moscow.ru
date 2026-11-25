@@ -24,6 +24,11 @@ function archiveTime(string $date): int {
   return $day->getTimestamp();
 }
 
+/** Drupal replaces timestamp 0 on save. This value only keeps undated material out of "newest". */
+function archiveUndated(): int {
+  return 1;
+}
+
 /** Resolve stable IDs from the reviewed manifest at the point of import. */
 function archiveField(mixed $value, string $name, array $nodes): mixed {
   if (!is_array($value)) {
@@ -55,15 +60,275 @@ function archiveField(mixed $value, string $name, array $nodes): mixed {
   return ['target_id' => $term->id()];
 }
 
+function restoreRecovered(Node $node, array $articles, ArchiveFiles $files, array $recovered, array $row): void {
+  $article = $articles[$row['article'] ?? ''] ?? [];
+  if ($row['type'] === 'journal') {
+    $html = (string) ($node->get('body')->value ?? '');
+    $unwrapped = unwrapRecoveredMarkers($html, recoveredFileUuids($files, $recovered));
+    $unwrapped = tightenRecoveredSpacing($unwrapped, $files, $recovered, $article);
+    $next = restorePlaceholders($unwrapped, $article, $files, $recovered);
+    if ($next !== NULL) {
+      $documents = [];
+      $node->get('body')->setValue([
+        'value' => archiveBody($next, $node->label(), $files, [], $documents),
+        'format' => 'basic_html',
+      ]);
+      $existing = array_map('strval', array_column($node->get('field_archive_documents')->getValue(), 'target_id'));
+      foreach ($documents as $document) {
+        if (!in_array((string) $document['target_id'], $existing, TRUE)) {
+          $node->get('field_archive_documents')->appendItem($document);
+        }
+      }
+      $node->save();
+    }
+    else {
+      $candidate = $unwrapped;
+      foreach ($files->missingUrls() as $url) {
+        if (str_contains($candidate, $url)) {
+          $candidate = maskMissingUrls($candidate, $files) ?? $candidate;
+          break;
+        }
+      }
+      if ($candidate !== $html) {
+        $node->get('body')->setValue(['value' => $candidate, 'format' => 'basic_html']);
+        $node->save();
+      }
+    }
+    attachStoredDocuments($node, $files);
+  }
+  if ($row['type'] !== 'album') {
+    return;
+  }
+  $current = array_map('strval', array_column($node->get('field_images')->getValue(), 'target_id'));
+  $expected = [];
+  $recoveredIds = [];
+  foreach ($row['images_from'] ?? [] as $articleId) {
+    $gallery = $articles[$articleId] ?? [];
+    foreach ($gallery['images'] ?? [] as $position => $url) {
+      if ($files->isMissing($url) || !$files->hasAsset($url)) {
+        continue;
+      }
+      $id = (string) $files->image($url, $gallery['title'] ?? $node->label(), $position + 1)->id();
+      $expected[] = $id;
+      if (in_array($url, $recovered, TRUE)) {
+        $recoveredIds[$id] = TRUE;
+      }
+    }
+  }
+  $withoutRecovered = static fn (array $ids): array => array_values(array_filter(
+    $ids,
+    static fn (string $id): bool => !isset($recoveredIds[$id]),
+  ));
+  if ($expected !== $current && $withoutRecovered($current) === $withoutRecovered($expected)) {
+    $node->set('field_images', array_map(static fn (string $id): array => ['target_id' => $id], $expected));
+    $node->save();
+  }
+}
+
+function restorePlaceholders(string $html, array $article, ArchiveFiles $files, array $recovered): ?string {
+  $changed = FALSE;
+  $photos = [];
+  foreach ($article['images'] ?? [] as $url) {
+    if (in_array($url, $recovered, TRUE) || $files->isMissing($url)) {
+      $photos[] = $url;
+    }
+  }
+  $photoMarker = '[Фотография отсутствует в архиве]';
+  if ($photos && substr_count($html, $photoMarker) === count($photos)) {
+    foreach ($photos as $url) {
+      $src = htmlspecialchars($url, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+      $html = preg_replace(
+        '/ ?\[' . preg_quote('Фотография отсутствует в архиве', '/') . '\] ?/',
+        '<img src="' . $src . '" alt="" />',
+        $html,
+        1,
+        $count,
+      );
+      if ($count !== 1) {
+        return NULL;
+      }
+    }
+    $changed = TRUE;
+  }
+  $fileMarker = ' [Файл отсутствует в архиве]';
+  $links = [];
+  if (!empty($article['body'])) {
+    foreach (Html::load($article['body'])->getElementsByTagName('a') as $link) {
+      $url = $link->getAttribute('href');
+      if ($url !== '' && (in_array($url, $recovered, TRUE) || $files->isMissing($url))) {
+        $links[] = ['url' => $url, 'text' => $link->textContent];
+      }
+    }
+  }
+  if ($links && substr_count($html, $fileMarker) === count($links)) {
+    foreach ($links as $link) {
+      $needle = $link['text'] . $fileMarker;
+      $position = strpos($html, $needle);
+      if ($position === FALSE) {
+        return NULL;
+      }
+      $href = htmlspecialchars($link['url'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+      $text = htmlspecialchars($link['text'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+      $html = substr_replace($html, '<a href="' . $href . '">' . $text . '</a>', $position, strlen($needle));
+    }
+    $changed = TRUE;
+  }
+  return $changed ? $html : NULL;
+}
+
+/** A link that is still the old address, after the file was found to be gone. */
+function recoveredFileUuids(ArchiveFiles $files, array $recovered): array {
+  static $uuids = NULL;
+  if ($uuids === NULL) {
+    $uuids = [];
+    foreach ($recovered as $url) {
+      if (!$files->hasAsset($url)) {
+        continue;
+      }
+      $file = $files->image($url, 'archive', 1)->field_media_image->entity;
+      if ($file) {
+        $uuids[$file->uuid()] = TRUE;
+      }
+    }
+  }
+  return $uuids;
+}
+
+/** Earlier recovery left the square brackets of a missing-photo marker around the picture. */
+function unwrapRecoveredMarkers(string $html, array $fileUuids): string {
+  if ($fileUuids === [] || !str_contains($html, '[')) {
+    return $html;
+  }
+  $unwrapped = preg_replace_callback(
+    '/\[\s*(<img\b[^>]*>)\s*\]/',
+    static function (array $match) use ($fileUuids): string {
+      if (preg_match('/data-entity-uuid="([^"]+)"/', $match[1], $uuid) && isset($fileUuids[$uuid[1]])) {
+        return $match[1];
+      }
+      return $match[0];
+    },
+    $html,
+  );
+  return is_string($unwrapped) ? $unwrapped : $html;
+}
+
+/**
+ * A restored photograph kept the spaces that belonged to the missing-photo marker.
+ * Drop one of those spaces when the source picture sat flush against the words.
+ */
+function tightenRecoveredSpacing(string $html, ArchiveFiles $files, array $recovered, array $article): string {
+  if ($recovered === [] || $html === '' || empty($article['body']) || !str_contains($html, 'data-entity-uuid')) {
+    return $html;
+  }
+  $wanted = [];
+  foreach (recoveredFileUuids($files, $recovered) as $uuid => $unused) {
+    if (str_contains($html, $uuid)) {
+      $wanted[$uuid] = TRUE;
+    }
+  }
+  if ($wanted === []) {
+    return $html;
+  }
+  $flush = [];
+  foreach (Html::load($article['body'])->getElementsByTagName('img') as $img) {
+    $url = $img->getAttribute('src');
+    if (!in_array($url, $recovered, TRUE) || !$files->hasAsset($url)) {
+      continue;
+    }
+    $file = $files->image($url, 'archive', 1)->field_media_image->entity;
+    if (!$file || !isset($wanted[$file->uuid()])) {
+      continue;
+    }
+    $previous = $img->previousSibling;
+    $next = $img->nextSibling;
+    $flush[$file->uuid()] = [
+      'before' => !($previous && $previous->nodeType === XML_TEXT_NODE && preg_match('/\s$/u', $previous->textContent)),
+      'after' => !($next && $next->nodeType === XML_TEXT_NODE && preg_match('/^\s/u', $next->textContent)),
+    ];
+  }
+  foreach ($flush as $uuid => $sides) {
+    $tightened = preg_replace_callback(
+      '/( ?)(<img\b[^>]*data-entity-uuid="' . preg_quote($uuid, '/') . '"[^>]*>)( ?)/',
+      static function (array $match) use ($sides): string {
+        $before = ($sides['before'] && $match[1] === ' ') ? '' : $match[1];
+        $after = ($sides['after'] && $match[3] === ' ') ? '' : $match[3];
+        return $before . $match[2] . $after;
+      },
+      $html,
+      1,
+    );
+    if (is_string($tightened)) {
+      $html = $tightened;
+    }
+  }
+  return $html;
+}
+
+function maskMissingUrls(string $html, ArchiveFiles $files): ?string {
+  $dom = Html::load($html);
+  $changed = FALSE;
+  foreach (iterator_to_array($dom->getElementsByTagName('img')) as $image) {
+    if ($files->isMissing($image->getAttribute('src'))) {
+      $image->replaceWith($dom->createTextNode(' [Фотография отсутствует в архиве] '));
+      $changed = TRUE;
+    }
+  }
+  foreach (iterator_to_array($dom->getElementsByTagName('a')) as $link) {
+    if ($files->isMissing($link->getAttribute('href'))) {
+      $link->replaceWith($dom->createTextNode($link->textContent . ' [Файл отсутствует в архиве]'));
+      $changed = TRUE;
+    }
+  }
+  return $changed ? Html::serialize($dom) : NULL;
+}
+
+function attachStoredDocuments(Node $node, ArchiveFiles $files): void {
+  $html = (string) ($node->get('body')->value ?? '');
+  $urls = \Drupal::service('file_url_generator');
+  $changed = FALSE;
+  $existing = array_map('strval', array_column($node->get('field_archive_documents')->getValue(), 'target_id'));
+  foreach ($files->attachmentUrls() as $url) {
+    if (!str_contains($html, $url)) {
+      continue;
+    }
+    $file = $files->document($url);
+    $local = $urls->generateString($file->getFileUri());
+    if ($local !== '' && $local !== $url) {
+      $html = str_replace($url, $local, $html);
+      $changed = TRUE;
+    }
+    $id = (string) $file->id();
+    if (!in_array($id, $existing, TRUE)) {
+      $node->get('field_archive_documents')->appendItem([
+        'target_id' => $file->id(),
+        'display' => 1,
+        'description' => '',
+      ]);
+      $existing[] = $id;
+      $changed = TRUE;
+    }
+  }
+  if (!$changed) {
+    return;
+  }
+  $node->get('body')->setValue(['value' => $html, 'format' => 'basic_html']);
+  $node->save();
+}
+
 function archiveBody(string $html, string $title, ArchiveFiles $files, array $targets, array &$attachments): string {
   $dom = Html::load($html);
   $urls = \Drupal::service('file_url_generator');
   foreach (iterator_to_array($dom->getElementsByTagName('img')) as $index => $image) {
-    if ($files->isMissing($image->getAttribute('src'))) {
+    $src = $image->getAttribute('src');
+    if ($files->isMissing($src)) {
       $image->replaceWith($dom->createTextNode(' [Фотография отсутствует в архиве] '));
       continue;
     }
-    $photo = $files->image($image->getAttribute('src'), $title, $index + 1);
+    // An existing journal already points these pictures at local files.
+    if (!$files->hasAsset($src)) {
+      continue;
+    }
+    $photo = $files->image($src, $title, $index + 1);
     $item = $photo->field_media_image->first();
     $file = $item->entity;
     $image->setAttribute('src', $urls->generateString($file->getFileUri()));
@@ -162,6 +427,11 @@ foreach ($missing as $url => $reason) {
   }
 }
 $files = new ArchiveFiles($directory, archiveJson("$directory/assets.json"), archiveJson("$directory/attachments.json"), $publicImages, $missing, array_column($articles, 'url'));
+$recoveredPath = getenv('CLUB_ARCHIVE_RECOVERED') ?: '';
+$recovered = ($recoveredPath !== '' && is_readable($recoveredPath)) ? archiveJson($recoveredPath) : [];
+if (!array_is_list($recovered)) {
+  throw new RuntimeException('Recovered file list must be a JSON array.');
+}
 $storage = \Drupal::entityTypeManager()->getStorage('node');
 $aliases = \Drupal::service('path_alias.manager');
 $redirects = \Drupal::keyValue(LegacySource::COLLECTION);
@@ -173,12 +443,20 @@ $account = \Drupal::service('account_switcher');
 $account->switchTo(User::load(1));
 $nodes = [];
 $created = 0;
-$saveRow = function (array $row) use (&$nodes, &$created, $storage, $aliases, $articles, $files, $targets, $redirects): void {
+$saveRow = function (array $row) use (&$nodes, &$created, $storage, $aliases, $articles, $files, $targets, $redirects, $recovered): void {
   $id = $row['id'];
   $matches = $storage->loadByProperties(['field_source_id' => $id]);
   $node = reset($matches);
   if (isset($nodes[$id]) || count($matches) > 1 || ($node && $node->bundle() !== $row['type'])) {
     throw new RuntimeException("Conflicting archive ID: $id");
+  }
+  if ($node && $recovered && (($row['article'] ?? NULL) !== NULL || ($row['images_from'] ?? []))) {
+    restoreRecovered($node, $articles, $files, $recovered, $row);
+  }
+  $article = $articles[$row['article'] ?? ''] ?? [];
+  if ($node && ($article['date'] ?? NULL) === '' && (int) $node->getCreatedTime() !== archiveUndated()) {
+    $node->setCreatedTime(archiveUndated());
+    $node->save();
   }
   if (!$node) {
     if ($aliases->getPathByAlias($row['alias'], 'ru') !== $row['alias']) {
@@ -197,6 +475,9 @@ $saveRow = function (array $row) use (&$nodes, &$created, $storage, $aliases, $a
     ]);
     if ($date = $row['created'] ?? $article['date'] ?? NULL) {
       $node->setCreatedTime(archiveTime($date));
+    }
+    elseif (($article['date'] ?? NULL) === '') {
+      $node->setCreatedTime(archiveUndated());
     }
     foreach ($row['fields'] ?? [] as $name => $value) {
       $node->set($name, archiveField($value, $name, $nodes));
