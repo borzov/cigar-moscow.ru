@@ -1,11 +1,3 @@
-club_forms.membership:
-  path: '/membership'
-  defaults:
-    _form: '\Drupal\club_forms\Form\MembershipForm'
-    _title: 'Заявка на вступление'
-  requirements:
-    _permission: 'access content'
-
 club_forms.festival:
   path: '/festival/{node}/register'
   defaults:

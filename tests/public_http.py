@@ -49,7 +49,7 @@ for path, links in {
     for expected in links:
         assert expected in document.urls, (path, expected)
 
-for path, expected in {"/en": "/en/club", "/en/rating?page=1": "/rating?page=1", "/en/membership": "/membership"}.items():
+for path, expected in {"/en": "/en/club", "/en/rating?page=1": "/rating?page=1"}.items():
     for method in ("GET", "HEAD"):
         status, location, _ = get(path, method)
         assert status == 302 and location == expected, (method, path, status, location)

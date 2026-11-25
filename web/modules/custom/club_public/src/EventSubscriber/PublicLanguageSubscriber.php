@@ -25,7 +25,7 @@ final class PublicLanguageSubscriber implements EventSubscriberInterface {
   }
 
   public static function russianRoute(string $route): bool {
-    return str_starts_with($route, 'club_public.') || in_array($route, ['club_forms.festival', 'club_forms.membership'], TRUE);
+    return str_starts_with($route, 'club_public.') || $route === 'club_forms.festival';
   }
 
   public function onRequest(RequestEvent $event): void {

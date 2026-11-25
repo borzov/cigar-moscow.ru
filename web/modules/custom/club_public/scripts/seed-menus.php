@@ -19,7 +19,7 @@ try {
     ],
     'club-footer' => [
       ['/gallery', 'Фотоальбомы', 'Photo albums'], ['/rating', 'Рейтинг сигар', 'Cigar rating'],
-      ['/events/archive', 'Архив событий', 'Event archive'], ['/membership', 'Вступление в клуб', 'Membership'],
+      ['/events/archive', 'Архив событий', 'Event archive'],
       ['/contacts', 'Контакты', 'Contacts'], ['/privacy', 'Обработка данных', 'Data processing'],
       ['/club/terms', 'Условия участия', 'Participation terms'],
     ],

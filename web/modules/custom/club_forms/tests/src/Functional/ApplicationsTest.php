@@ -33,19 +33,21 @@ final class ApplicationsTest extends BrowserTestBase {
     $this->drupalGet('admin/content/club-applications');
     $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet('membership');
+    $this->assertSession()->statusCodeEquals(404);
+    $this->drupalGet($this->openFestivalPath());
     $this->assertSession()->linkByHrefExists('/privacy');
     $this->assertSession()->checkboxNotChecked('consent');
     $values = ['applicant_name' => 'Тестовый участник', 'email' => 'example@example.test'];
-    $this->submitForm($values, 'Отправить заявку');
+    $this->submitForm($values, 'Зарегистрироваться');
     $this->assertSame(0, $this->submissionCount());
-    $this->submitForm(['email' => 'invalid address', 'consent' => 1] + $values, 'Отправить заявку');
+    $this->submitForm(['email' => 'invalid address', 'consent' => 1] + $values, 'Зарегистрироваться');
     $this->assertSame(0, $this->submissionCount());
-    $this->submitForm($values + ['consent' => 1], 'Отправить заявку');
+    $this->submitForm($values + ['consent' => 1], 'Зарегистрироваться');
     $this->assertSession()->pageTextContains('Ваша заявка принята.');
     $this->assertSame(1, $this->submissionCount());
     $row = $this->container->get('database')->select('club_application', 'a')->fields('a')->execute()->fetchAssoc();
-    $this->assertSame('membership', $row['kind']);
-    $this->assertNull($row['festival_nid']);
+    $this->assertSame('festival', $row['kind']);
+    $this->assertGreaterThan(0, (int) $row['festival_nid']);
     $this->assertSame('1', $row['consent_version']);
     $this->assertGreaterThan(0, (int) $row['consented']);
     $this->drupalLogin($this->drupalCreateUser(['access content']));
@@ -65,11 +67,11 @@ final class ApplicationsTest extends BrowserTestBase {
    */
   public function testSubmissionReplay(): void {
     $values = ['applicant_name' => 'Участник', 'email' => 'example@example.test', 'consent' => 1];
-    $this->drupalGet('membership');
+    $this->drupalGet($this->openFestivalPath());
     $client = $this->getSession()->getDriver()->getClient();
-    $original = $client->getCrawler()->selectButton('Отправить заявку')->form($values);
-    $this->drupalGet('membership');
-    $second = $client->getCrawler()->selectButton('Отправить заявку')->form($values);
+    $original = $client->getCrawler()->selectButton('Зарегистрироваться')->form($values);
+    $this->drupalGet($this->openFestivalPath());
+    $second = $client->getCrawler()->selectButton('Зарегистрироваться')->form($values);
     $this->assertNotSame($original['form_build_id']->getValue(), $second['form_build_id']->getValue());
     $client->submit($original);
     $this->assertSame(1, $this->submissionCount());
@@ -85,12 +87,12 @@ final class ApplicationsTest extends BrowserTestBase {
    */
   public function testFloodLimit(): void {
     $values = ['applicant_name' => 'Участник', 'email' => 'example@example.test', 'consent' => 1];
-    $this->drupalGet('membership');
+    $this->drupalGet($this->openFestivalPath());
     for ($i = 0; $i < 5; $i++) {
-      $this->submitForm($values, 'Отправить заявку');
+      $this->submitForm($values, 'Зарегистрироваться');
     }
     $this->assertSame(5, $this->submissionCount());
-    $this->submitForm($values, 'Отправить заявку');
+    $this->submitForm($values, 'Зарегистрироваться');
     $this->assertSession()->pageTextContains('Слишком много попыток.');
     $this->assertSame(5, $this->submissionCount());
   }
@@ -142,6 +144,36 @@ final class ApplicationsTest extends BrowserTestBase {
     $festival->set('field_reg_start', $date)->setUnpublished()->save();
     $this->drupalGet($path);
     $this->assertSession()->statusCodeEquals(403);
+  }
+
+  /**
+   * Creates a festival whose registration is open today.
+   */
+  private function openFestivalPath(): string {
+    if (!NodeType::load('festival')) {
+      NodeType::create(['type' => 'festival', 'name' => 'Фестиваль'])->save();
+      foreach (['field_reg_start', 'field_reg_end'] as $field) {
+        if (!FieldStorageConfig::loadByName('node', $field)) {
+          FieldStorageConfig::create([
+            'entity_type' => 'node',
+            'field_name' => $field,
+            'type' => 'datetime',
+            'settings' => ['datetime_type' => 'date'],
+          ])->save();
+        }
+        if (!FieldConfig::loadByName('node', 'festival', $field)) {
+          FieldConfig::create(['entity_type' => 'node', 'field_name' => $field, 'bundle' => 'festival'])->save();
+        }
+      }
+    }
+    $date = (new \DateTimeImmutable('today', new \DateTimeZone('Europe/Moscow')))->format('Y-m-d');
+    $festival = $this->drupalCreateNode([
+      'type' => 'festival',
+      'title' => 'Тестовый фестиваль',
+      'field_reg_start' => $date,
+      'field_reg_end' => $date,
+    ]);
+    return 'festival/' . $festival->id() . '/register';
   }
 
   /**

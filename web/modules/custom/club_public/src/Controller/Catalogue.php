@@ -46,9 +46,6 @@ final class Catalogue extends ControllerBase {
     $build['festivals'] = $this->section('Мировые фестивали и поездки', $this->rows($this->byDate('event')->condition('field_event_type', 'world_festival'), 3), '', $this->link('Все поездки', 'travel'));
     $build['journal'] = $this->section('Журнал', $this->rows($this->query('journal')->sort('created', 'DESC'), 3), 'Материалы готовятся к публикации.', $this->link('Все материалы', 'journal'));
     $build['club'] = $this->clubLinks('Клуб', ['/club/awards', '/club/partners'], summaries: TRUE);
-    $build['join'] = ['#type' => 'container', '#attributes' => ['class' => ['club-section']]];
-    $build['join']['heading'] = ['#type' => 'html_tag', '#tag' => 'h2', '#value' => 'Заявка на вступление'];
-    $build['join']['form'] = $this->formBuilder()->getForm(\Drupal\club_forms\Form\MembershipForm::class);
     return $this->finish($build, TRUE);
   }
 
